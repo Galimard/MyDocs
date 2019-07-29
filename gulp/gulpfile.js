@@ -111,27 +111,31 @@ var cssFiles = [ //файлы в том порядке, в котором дол
   './src/css/media.css'
 ];
 
-//таск на стили
+// альтернатива 'app/libs/*.css'
+
+/*---------------------------------Сборка библиотек стилей в один файл-------------------*/
 function styles() {
     //'./src/css/**/*.css'
     return gulp.src(cssFiles)
 
-        .pipe(concat('style.css'))
+        .pipe(concat('libs.min.css'))
         .pipe(prefix({
             browsers: ['last 2 versions'],
             cascade: false
         }))
         .pipe(cssnano())
-        .pipe(gulp.dest('./build/css'))
+        .pipe(gulp.dest('dist/css/'))
         .pipe(browserSync.stream());
 }
 
 var jsFiles = [ //файлы в том порядке, в котором должны быть добавлены в общий файл
-    './src/js/script.js',
-    './src/js/main.js'
+    'app/js/script.js',
+    'app/js/main.js'
 ];
 
-//таск на скрипты
+// альтернатива 'app/js/libs/*.js'
+
+/*------------------Сборка библиотек скриптов в один файл---------------------*/
 function scripts() {
     return gulp.src(jsFiles)
 
@@ -139,7 +143,7 @@ function scripts() {
         .pipe(uglify({
             toplevel: true //максимальный уровень минификации
         }))
-        .pipe(gulp.dest('./build/js'))
+        .pipe(gulp.dest('dist/js/'))
         .pipe(browserSync({ stream: true }));
 }
 
@@ -193,21 +197,21 @@ gulp.task('server', gulp.series('js-libs', 'css-libs', 'sass', 'pug', 'js', func
 gulp.task('default', gulp.series('server'));
 
 //отслеживание файлов и обновление браузера
-function watch() {
-    browserSync.init({ //запуск локального сервера
-        server: {
-            baseDir: "./"
-        },
-        notify: false // Отключаем уведомления
-    });
-    //отслеживание css файлов
-    gulp.watch('./src/css/**/*.css', styles); //корневая директория/папка/папка/любое количество папко/любое название с расширением цсс
-    gulp.watch('./src/js/**/*.js', scripts);
-    gulp.watch('./*.html').on('change', browserSync.reload);
-}
-
-gulp.task('styles', styles); //название таска, функция
-gulp.task('scripts', scripts);
-gulp.task('watch', watch); //отслеживание изменений
-gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts))); //очищение папки билт, добавление криптов и стилей
-gulp.task('dev', gulp.series('build', 'watch'));
+// function watch() {
+//     browserSync.init({ //запуск локального сервера
+//         server: {
+//             baseDir: "./"
+//         },
+//         notify: false // Отключаем уведомления
+//     });
+//     //отслеживание css файлов
+//     gulp.watch('./src/css/**/*.css', styles); //корневая директория/папка/папка/любое количество папко/любое название с расширением цсс
+//     gulp.watch('./src/js/**/*.js', scripts);
+//     gulp.watch('./*.html').on('change', browserSync.reload);
+// }
+//
+// gulp.task('styles', styles); //название таска, функция
+// gulp.task('scripts', scripts);
+// gulp.task('watch', watch); //отслеживание изменений
+// gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts))); //очищение папки билт, добавление криптов и стилей
+// gulp.task('dev', gulp.series('build', 'watch'));
