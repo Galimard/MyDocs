@@ -23,7 +23,7 @@ var gulp = require('gulp'),
 
 /*---------------------------------Сборка спрайтов SVG-------------------*/
 gulp.task('svg-sprites', function(callback) {
-    return gulp.src(path.svg.input)
+    return gulp.src('app/images/svg/*.svg')
         .pipe(plumber({
             errorHandler: notify.onError()
         }))
@@ -32,12 +32,12 @@ gulp.task('svg-sprites', function(callback) {
             inlineSvg: true
         }))
         .pipe(rename('symbols.svg'))
-        .pipe(gulp.dest(path.svg.output));
+        .pipe(gulp.dest('app/images/sprites'));
 });
 
 /*-------------------- Формирование растрового спрайта -------------------*/
 gulp.task('picture-sprites', function (callback) {
-    var spriteData =  gulp.src(path.sprites.input)
+    var spriteData =  gulp.src('app/images/icons/**/*.+(jpg|jpeg|png)')
         .pipe(plumber({
             errorHandler: notify.onError()
         }))
@@ -51,27 +51,27 @@ gulp.task('picture-sprites', function (callback) {
                 sprite.name = 's-' + sprite.name;
             }
         }));
-    spriteData.img.pipe(gulp.dest(path.sprites.output));
-    spriteData.css.pipe(gulp.dest(path.sprites.css));
+    spriteData.img.pipe(gulp.dest('app/images/sprites/'));
+    spriteData.css.pipe(gulp.dest('app/pr.common.blocks/'));
     callback();
 });
 
 /*-----------------------Конвертация шрифтов woff и woff2-----------------*/
 gulp.task('woff', function(callback) {
-    return gulp.src(path.fonts.input)
+    return gulp.src('app/fonts/ttf/**/*.ttf')
         .pipe(plumber({
             errorHandler: notify.onError()
         }))
         .pipe(ttf2woff())
-        .pipe(gulp.dest(path.fonts.output));
+        .pipe(gulp.dest('app/fonts'));
 });
 gulp.task('woff2', function(callback) {
-    return gulp.src(path.fonts.input)
+    return gulp.src('app/fonts/ttf/**/*.ttf')
         .pipe(plumber({
             errorHandler: notify.onError()
         }))
         .pipe(ttf2woff2())
-        .pipe(gulp.dest(path.fonts.output));
+        .pipe(gulp.dest('app/fonts'));
 });
 
 gulp.task('fonts', gulp.series('woff', 'woff2'));
@@ -87,7 +87,7 @@ gulp.task('compress-pictures-images', function(callback) {
             sigFile: settings.sigFile,
             key: settings.key
         }))
-        .pipe(gulp.dest(path.images.outputImages));
+        .pipe(gulp.dest('app/dist/images/'));
 });
 
 gulp.task('compress-pictures-userdata', function(callback) {
@@ -100,15 +100,15 @@ gulp.task('compress-pictures-userdata', function(callback) {
             sigFile: settings.sigFile,
             key: settings.key
         }))
-        .pipe(gulp.dest(path.images.outputUserdata));
+        .pipe(gulp.dest('app/dist/userdata/'));
 });
 
 gulp.task('compress-images', gulp.series('compress-pictures-images', 'compress-pictures-userdata'));
 
 
 var cssFiles = [ //файлы в том порядке, в котором должны быть добавлены в общий файл
-  './src/css/main.css',
-  './src/css/media.css'
+  'app/css/main.css',
+  'app/css/media.css'
 ];
 
 // альтернатива 'app/libs/*.css'
