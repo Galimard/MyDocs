@@ -23,10 +23,7 @@ var gulp = require('gulp'),
 
 /*---------------------------------Сборка спрайтов SVG-------------------*/
 gulp.task('svg-sprites', function(callback) {
-    return gulp.src('app/images/svg/*.svg')
-        .pipe(plumber({
-            errorHandler: notify.onError()
-        }))
+    return gulp.src('app/img/svg/*.svg')
         .pipe(svgmin())
         .pipe(svgstore({
             inlineSvg: true
@@ -38,9 +35,6 @@ gulp.task('svg-sprites', function(callback) {
 /*-------------------- Формирование растрового спрайта -------------------*/
 gulp.task('picture-sprites', function (callback) {
     var spriteData =  gulp.src('app/images/icons/**/*.+(jpg|jpeg|png)')
-        .pipe(plumber({
-            errorHandler: notify.onError()
-        }))
         .pipe(spritesmith({
             imgName: settings.picSpriteName,
             cssName: 'sprite.' + settings.cssFormat,
