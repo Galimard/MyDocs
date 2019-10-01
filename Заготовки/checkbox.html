@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .cart-from__checkbox {
+            display: none;
+            /*margin: 30px 10px 45px 0;*/
+        }
+
+        .cart-from__checkbox-text{
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .cart-from__checkbox-text::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            border: solid 1px #37c04f;
+            background: #40d55a;
+            position: absolute;
+            top: 2px;
+            left: 0;
+        }
+
+        .cart-from__checkbox:checked + .cart-from__checkbox-text:before {
+            background: #40d55a url("/local/templates/bd_deliverysushi_s1/images/svg/check.svg ") center center no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <input type="checkbox" class="cart-from__checkbox">
+    <span class="cart-from__checkbox-text">Получить бонусную карту</span>
+</body>
+</html>

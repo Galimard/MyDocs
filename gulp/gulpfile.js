@@ -29,23 +29,18 @@ gulp.task('svg-sprites', function(callback) {
             inlineSvg: true
         }))
         .pipe(rename('symbols.svg'))
-        .pipe(gulp.dest('app/images/sprites'));
+        .pipe(gulp.dest('app/img/sprites'));
 });
 
 /*-------------------- Формирование растрового спрайта -------------------*/
 gulp.task('picture-sprites', function (callback) {
-    var spriteData =  gulp.src('app/images/icons/**/*.+(jpg|jpeg|png)')
+    var spriteData =  gulp.src('app/img/icons/**/*.+(jpg|jpeg|png)')
         .pipe(spritesmith({
-            imgName: settings.picSpriteName,
-            cssName: 'sprite.' + settings.cssFormat,
-            algorithm: 'binary-tree',
-            padding: 10,
-            cssFormat: settings.cssFormat,
-            cssVarMap: function(sprite) {
-                sprite.name = 's-' + sprite.name;
-            }
+            imgName: 'sprite.png',
+            cssName: 'sprite.ccs',
+            padding: 10
         }));
-    spriteData.img.pipe(gulp.dest('app/images/sprites/'));
+    spriteData.img.pipe(gulp.dest('app/img/sprites/'));
     spriteData.css.pipe(gulp.dest('app/pr.common.blocks/'));
     callback();
 });
@@ -65,7 +60,7 @@ gulp.task('woff2', function(callback) {
             errorHandler: notify.onError()
         }))
         .pipe(ttf2woff2())
-        .pipe(gulp.dest('app/fonts'));
+        .pipe(gulp.dest('app/fonts/'));
 });
 
 gulp.task('fonts', gulp.series('woff', 'woff2'));

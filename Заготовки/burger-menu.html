@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .header-menu__burger {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 22px;
+            height: 21px;
+            vertical-align: middle;
+        }
+
+        .burger-line {
+            display: block;
+            cursor: pointer;
+            height: 4px;
+            width: 100%;
+            background-color: #3a5362;
+            border-radius: 2px;
+            margin-bottom: 4px;
+        }
+
+        .burger-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .burger-line3 {
+            display: none;
+        }
+
+        .burger-line2:first-child {
+            position: absolute;
+            top: 7px;
+            transform: rotate(45deg);
+            -webkit-transition: transform 0.5s ease;
+            -moz-transition: transform 0.5s ease;
+            -ms-transition: transform 0.5s ease;
+            -o-transition: transform 0.5s ease;
+            transition: transform 0.5s ease;
+        }
+
+        .burger-line2:last-child {
+            position: absolute;
+            top: 7px;
+            transform: rotate(-45deg);
+            -webkit-transition: transform 0.5s ease;
+            -moz-transition: transform 0.5s ease;
+            -ms-transition: transform 0.5s ease;
+            -o-transition: transform 0.5s ease;
+            transition: transform 0.5s ease;
+        }
+
+        .header-menu__navigation {
+            display: none;
+        }
+
+        .header-menu__navigation2 {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            z-index: 10;
+            background: #d7d7d7;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header-menu-list__item2 {
+            display: block;
+        }
+/*фишуля при наведении*/
+        .header-menu__burger:hover .burger-line:not(.burger-line2):nth-child(1),
+        .header-menu__burger:hover .burger-line:not(.burger-line2):nth-child(3){
+            transform: rotate(-4deg) scaleY(1.1);
+            -webkit-transition: transform 0.3s ease;
+            -moz-transition: transform 0.3s ease;
+            -ms-transition: transform 0.3s ease;
+            -o-transition: transform 0.3s ease;
+            transition: transform 0.3s ease;
+        }
+        .header-menu__burger:hover .burger-line:not(.burger-line3):nth-child(2){
+            transform: rotate(4deg) scaleY(1.1);
+            -webkit-transition: transform 0.3s ease;
+            -moz-transition: transform 0.3s ease;
+            -ms-transition: transform 0.3s ease;
+            -o-transition: transform 0.3s ease;
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+<a href="#" class="header-menu__burger">
+    <span class="burger-line line__main"></span>
+    <span class="burger-line line__middle"></span>
+    <span class="burger-line line__main"></span>
+</a>
+<nav class="header-menu__navigation header-menu__navigation2">
+    <ul class="header-menu__list">
+        <li class="header-menu-list__item header-menu-list__item2"><a href="#" class="header-menu-list__link">Home</a></li>
+        <li class="header-menu-list__item header-menu-list__item2"><a href="#" class="header-menu-list__link ">Our story</a></li>
+        <li class="header-menu-list__item header-menu-list__item2"><a href="#" class="header-menu-list__link">Tenant</a></li>
+        <li class="header-menu-list__item header-menu-list__item2"><a href="#" class="header-menu-list__link">Owner</a></li>
+        <li class="header-menu-list__item header-menu-list__item2"><a href="#" class="header-menu-list__link">Contact us</a></li>
+    </ul>
+</nav>
+<nav class="header-menu__navigation">
+    <ul class="header-menu__list">
+        <li class="header-menu-list__item"><a href="#" class="header-menu-list__link">Home</a></li>
+        <li class="header-menu-list__item header-menu-list__item--active"><a href="#" class="header-menu-list__link ">Our story</a></li>
+        <li class="header-menu-list__item"><a href="#" class="header-menu-list__link">Tenant</a></li>
+        <li class="header-menu-list__item"><a href="#" class="header-menu-list__link">Owner</a></li>
+        <li class="header-menu-list__item"><a href="#" class="header-menu-list__link">Contact us</a></li>
+    </ul>
+</nav>
+<script>
+    //бургер меню
+    if($('.header-menu__burger') && $('.header-menu__burger').length > 0) {
+        $('.header-menu__burger').on('click', function(event) {
+            event.preventDefault();
+
+            var menu = $('.header-menu__navigation2'),
+                display = menu.css('display');
+
+            if(display === 'none') {
+                menu.css('display', 'inline-block').animate({height: 247}, 'slow');
+            } else {
+                menu.css('display', 'none').animate({height: 0}, 'slow');
+            }
+
+            //крестик
+            $('.line__main').toggleClass('burger-line2');
+            $('.line__middle').toggleClass('burger-line3');
+
+        });
+    }
+</script>
+</body>
+</html>

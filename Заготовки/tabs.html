@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .search-property__tabs {
+            display: inline-block;
+            position: relative;
+            vertical-align: top;
+            margin-right: 155px;
+        }
+
+        .tabs__list-item  {
+            height: 51px;
+            float: left;
+            font-family: "ArialRoundedMTBold", 'Arial', sans-serif;
+            color: #000000;
+            font-size: 1.15rem;
+            margin-top: 12px;
+        }
+        .tabs__content {
+            display: block;
+            opacity: 0;
+            position: absolute;
+            top: 49px;
+            left: 0;
+            padding: 20px 40px;
+            width: 420px;
+            height: 340px;
+            border-radius: 0 15px 0 0;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, #60a4ce, transparent);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            font-family: 'ArialMT', 'Arial', sans-serif;
+            z-index: 0;
+        }
+        .tabs__title-input {
+            display: none;
+        }
+        .tabs__title-input:checked + .tabs__title {
+            background-color: #60a4ce;
+            color: #ffffff;
+        }
+
+        .tabs__title-input:checked ~ .tabs__content {
+            z-index: 1;
+            opacity: 1;
+            -webkit-transition: opacity 0.3s ease;
+            -moz-transition: opacity 0.3s ease;
+            -ms-transition: opacity 0.3s ease;
+            -o-transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease;
+        }
+        /*checkbox*/
+        .search__checkbox {
+            display: none;
+        }
+
+        .search__checkbox-text {
+            position: relative;
+            padding: 0 0 0 40px;
+            cursor: pointer;
+        }
+
+        .search__checkbox-text:before {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            width: 18px;
+            height: 18px;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.07), inset 0 0 0 2px #fcfdfd;
+            border: 1px solid #bbbbbb;
+            border-radius: 5px;
+            background: #e4e4e4;
+        }
+
+        .search__checkbox-text:after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            width: 18px;
+            height: 18px;
+            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.07), inset 0 0 0 2px #fcfdfd;
+            border: 1px solid #bbbbbb;
+            border-radius: 5px;
+            background: #e4e4e4 url("../img/Check.png") center center no-repeat;
+            opacity: 0;
+        }
+
+        .search__checkbox:checked + .search__checkbox-text:after {
+            /*background: #e4e4e4 url("../img/Check.png") center center no-repeat;*/
+            opacity: 1;
+            -webkit-transition: opacity 0.3s ease;
+            -moz-transition: opacity 0.3s ease;
+            -ms-transition: opacity 0.3s ease;
+            -o-transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+<ul class="search-property__tabs">
+    <li class="tabs__list-item">
+        <input type="radio" name="tabs" id="tab-1" checked class="tabs__title-input">
+        <label for="tab-1" class="tabs__title">Tenants</label>
+        <div class="tabs__content">
+            <span class="tabs-content__text">Address, Suburbs, Postcodes, or Regions</span>
+            <form action="#" name="search-address" method="post" enctype="multipart/form-data" class="search">
+                <input type="text" title="address" placeholder="Example: Wichita Falls, Texas 76301" class="search__input">
+                <label><input type="checkbox" checked class="search__checkbox"><span class="search__checkbox-text">Include surrounding suburbs</span></label>
+            </form>
+        </div>
+    </li>
+    <li class="tabs__list-item">
+        <input type="radio" name="tabs" id="tab-2" class="tabs__title-input">
+        <label for="tab-2" class="tabs__title">Oweners</label>
+        <div class="tabs__content">
+            <span class="tabs-content__text">Suburbs, Address, or Regions</span>
+            <form action="#" name="search-address" method="post" enctype="multipart/form-data" class="search">
+                <input type="text" title="address" placeholder="Example: Wichita Falls, Texas 76301" class="search__input">
+                <label><input type="checkbox" checked class="search__checkbox"><span class="search__checkbox-text">Include surrounding suburbs</span></label>
+            </form>
+        </div>
+    </li>
+</ul>
+</body>
+</html>

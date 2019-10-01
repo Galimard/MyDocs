@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .accordion {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        .accordion__item {
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .accordion__label {
+            position: relative;
+            z-index: 20;
+            cursor: pointer;
+            padding-left: 18px;
+            -webkit-transition: color0.3s time;
+            -moz-transition: color0.3s time;
+            -ms-transition: color0.3s time;
+            -o-transition: color0.3s time;
+            transition: color0.3s time;
+        }
+
+        .accordion__label::before {
+            content: '';
+            display: block;
+            background: url("../img/arrow-down.png") center no-repeat;
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 3px;
+            left: 0;
+            -webkit-transition: transform 0.3s, background 0.3s;
+            -moz-transition: transform 0.3s, background 0.3s;
+            -ms-transition: transform 0.3s, background 0.3s;
+            -o-transition: transform 0.3s, background 0.3s;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .accordion__label:hover::before {
+            background: url("../img/arrow-down2.png") center no-repeat;
+        }
+
+        .accordion__label:hover {
+            color: #9ae3f4;
+        }
+
+        .accordion__input:checked + .accordion__label::before {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        .accordion__input {
+            display: none;
+        }
+
+        .accordion-item__menu {
+            padding-left: 15px;
+            margin-top: 5px;
+            overflow: hidden;
+            max-height: 0;
+            position: relative;
+            z-index: 10;
+            -webkit-transition: max-height 0.3s;
+            -moz-transition: max-height 0.3s;
+            -ms-transition: max-height 0.3s;
+            -o-transition: max-height 0.3s;
+            transition: max-height 0.3s;
+        }
+
+        .accordion__input:checked ~ .accordion-item__menu {
+            border-top: 1px solid #4cb1ca;
+            max-height: 100px;
+            -webkit-transition: max-height 0.3s;
+            -moz-transition: max-height 0.3s;
+            -ms-transition: max-height 0.3s;
+            -o-transition: max-height 0.3s;
+            transition: max-height 0.3s;
+        }
+
+        .accordion-item__menu-item {
+            text-transform: capitalize;
+            padding: 5px;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<ul class="accordion">
+    <li class="footer__text accordion__item">
+        <input id="ac-1" name="accordion-1" type="checkbox" class="accordion__input">
+        <label for="ac-1" class="footer__text accordion__label">Lorem ipsum dolor</label>
+        <ul class="accordion-item__menu">
+            <li class="accordion-item__menu-item">lorem</li>
+            <li class="accordion-item__menu-item">lorem</li>
+        </ul>
+    </li>
+    <li class="footer__text accordion__item">
+        <input id="ac-2" name="accordion-1" type="checkbox" class="accordion__input">
+        <label for="ac-2" class="footer__text accordion__label">Sit amet, consectetur</label>
+        <ul class="accordion-item__menu">
+            <li class="accordion-item__menu-item">lorem</li>
+            <li class="accordion-item__menu-item">lorem</li>
+        </ul>
+    </li>
+    <li class="footer__text accordion__item">
+        <input id="ac-3" name="accordion-1" type="checkbox" class="accordion__input">
+        <label for="ac-3" class="footer__text accordion__label">Adipisicing elit</label>
+        <ul class="accordion-item__menu">
+            <li class="accordion-item__menu-item">lorem</li>
+            <li class="accordion-item__menu-item">lorem</li>
+        </ul>
+    </li>
+</ul>
+<!--второй вариант-->
+<div class="faq">
+
+    <div class="faq__item">
+        <a href="#answer-1" class="faq-title js-faq-title">Question 1</a>
+        <div class="faq-content" id="answer-1">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt blanditiis quam ullam distinctio aliquid, ad aspernatur temporibus quis labore, est quidem voluptatum. Asperiores similique totam veritatis inventore velit distinctio, ullam!</p>
+        </div>
+    </div>
+
+    <div class="faq__item">
+        <a href="#" class="faq-title js-faq-title">Question 2</a>
+        <div class="faq-content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt blanditiis quam ullam distinctio aliquid, ad aspernatur temporibus quis labore, est quidem voluptatum. Asperiores similique totam veritatis inventore velit distinctio, ullam!</p>
+        </div>
+    </div>
+
+    <div class="faq__item">
+        <a href="#" class="faq-title js-faq-title">Question 3</a>
+        <div class="faq-content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt blanditiis quam ullam distinctio aliquid, ad aspernatur temporibus quis labore, est quidem voluptatum. Asperiores similique totam veritatis inventore velit distinctio, ullam!</p>
+        </div>
+    </div>
+
+</div>
+<script>
+    $('.js-faq-title').on('click', function (e) {
+
+        e.preventDefault();
+
+        var $this = $(this);
+        // var answerId = $this.attr("href"); //2 вариант
+
+        if(!$this.hasClass("title--active")) { //есть ли у ссылки класс актив
+            $(".faq-content").slideUp(); //скрывам у всех контент
+            $(".js-faq-title").removeClass("title--active"); //у всех удалем класс актив
+        }
+
+        $this.toggleClass("title--active");
+        $this.siblings().slideToggle();
+        // answerId.siblings().slideToggle(); //2 вариант
+        // $(this).next().slideDown(); //вариант вместо siblings
+
+    });
+</script>
+</body>
+</html>

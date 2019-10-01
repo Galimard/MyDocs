@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .footer__link {
+            color: #000;
+            font-size: 0.95rem;
+            line-height: 1.5rem;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .footer__link::after {
+            content: '';
+            display: inline-block;
+            height: 1px;
+            width: 0;
+            background: #000000;
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            -webkit-transition: width 0.3s ease-in-out;
+            -moz-transition: width 0.3s ease-in-out;
+            -ms-transition: width 0.3s ease-in-out;
+            -o-transition: width 0.3s ease-in-out;
+            transition: width 0.3s ease-in-out;
+            -webkit-transform: translateX(-50%);
+            -moz-transform: translateX(-50%);
+            -ms-transform: translateX(-50%);
+            -o-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+
+        .footer__link:hover:after {
+            width: 100%;
+        }
+
+        /*style for hover*/
+        .life-tabs-block__btn {
+            display: block;
+            width: 160px;
+            height: 45px;
+            text-align: center;
+            line-height: 45px;
+            border-radius: 23px;
+            background-color: #e12457;
+            position: relative;
+        }
+
+        .life-tabs-block__btn a {
+            color: rgba(0, 0, 0, 0.3);
+
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .life-tabs-block__btn::before {
+            content: 'Подробнее';
+            color: #ffffff;
+            font-weight: 700;
+            -webkit-transition: transform 0.3s ease, opacity 0.3s ease;
+            -moz-transition: transform 0.3s ease, opacity 0.3s ease;
+            -ms-transition: transform 0.3s ease, opacity 0.3s ease;
+            -o-transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: absolute;
+        }
+
+        .life-tabs-block__btn:hover::before {
+            opacity: 0;
+            -webkit-transform: scale(0.9);
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -o-transform: scale(0.9);
+            transform: scale(0.9);
+        }
+
+        /*placeholder*/
+        .login__input::-webkit-input-placeholder {
+            font-family: "Montserrat", "Arial", sans-serif;
+            color: #29323c;
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.5;
+        }
+
+        .login__input:-moz-placeholder {
+            font-family: "Montserrat", "Arial", sans-serif;
+            color: #29323c;
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.5;
+        }
+
+        .login__input::-moz-placeholder {
+            font-family: "Montserrat", "Arial", sans-serif;
+            color: #29323c;
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.5;
+        }
+
+        .login__input:-ms-input-placeholder {
+            font-family: "Montserrat", "Arial", sans-serif;
+            color: #29323c;
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.5;
+        }
+
+        .login__input:focus::-webkit-input-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .login__input:focus:-moz-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .login__input:focus::-moz-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .login__input:focus:-ms-input-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li><a href="#" class="footer__link">Rent a home</a></li>
+    <li><a href="#" class="footer__link">Lease a home</a></li>
+    <li><a href="#" class="footer__link">Buy a home</a></li>
+    <li><a href="#" class="footer__link">Sell a home</a></li>
+    <li><a href="#" class="footer__link">Ask advices</a></li>
+</ul>
+
+<!--hover-->
+<div class="life-tabs-block__btn"><a href="#">Подробнее</a></div>
+
+<!--socials-->
+<a href="#" class="persons-socials__link persons-socials-link__twitter"><span class="visually-hidden">twitter</span></a>
+<a href="#" class="persons-socials__link persons-socials-link__linked"><span class="visually-hidden">linkedin</span></a>
+<a href="#" class="persons-socials__link persons-socials-link__vimeo"><span class="visually-hidden">vimeo</span></a>
+<a href="#" class="persons-socials__link persons-socials-link__drrrible"><span class="visually-hidden">drrrible</span></a>
+</body>
+</html>
