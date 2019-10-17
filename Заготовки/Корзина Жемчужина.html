@@ -1,0 +1,2087 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        /*popup cart*/
+
+        .open-modal {
+            overflow: hidden;
+        }
+
+        .popup-overlay {
+            z-index: 101;
+            position: fixed;
+            background-color: rgba(41, 47, 50, 0.6);
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            display: none;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .popup-cart {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: block;
+            width: 465px;
+            /*height: 825px;*/
+            height: auto;
+            box-shadow: 0 2px 16px 0 rgba(41, 46, 80, 0.3);
+            background-color: #ffffff;
+            z-index: 102;
+            padding: 38px 32px;
+            /*overflow-y: scroll;*/
+        }
+
+        .popup-close,
+        .popup-close2 {
+            display: block;
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            right: 10px;
+            top: 16px;
+        }
+
+        .popup-close::before,
+        .popup-close2::before {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 100%;
+            background: #a5a5a5;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            transform-origin: 0 0;
+        }
+
+        .popup-close::after,
+        .popup-close2::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 100%;
+            background: #a5a5a5;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg) translate(7px, -8px);
+            transform-origin: 0 0;
+        }
+
+        .popup-close:hover,
+        .popup-close2:hover {
+            cursor: pointer;
+        }
+
+        .cart-title {
+            font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            font-style: normal;
+            color: #292f32;
+        }
+
+        .cart-slider-wrap {
+            position: relative;
+        }
+
+        .cart-slider__navigation {
+            position: absolute;
+            top: 49px;
+            display: flex;
+            justify-content: space-between;
+            height: 15px;
+            width: 100%;
+            z-index: -1;
+        }
+
+        .cart-slider {
+            width: 100%;
+            height: 116px;
+            white-space: nowrap;
+            /*overflow: hidden;*/
+            position: relative; /*for shadow*/
+        }
+
+        .cart-slider .slick-prev, .slick-next {
+            z-index: 100;
+        }
+
+        .cart-slider .slick-prev.slick-arrow {
+            background: url("/local/templates/bd_deliverysushi_s1/images/svg/arrow.svg") center center no-repeat;
+            transform: scale(-1, 1);
+            top: 47px;
+        }
+
+        .cart-slider .slick-next.slick-arrow {
+            background: url("/local/templates/bd_deliverysushi_s1/images/svg/arrow.svg") center center no-repeat;
+        }
+
+        .cart-slider .slick-prev.slick-disabled::before, .slick-next.slick-disabled::before {
+            opacity: 1;
+        }
+
+        .cart-slider .slick-arrow.slick-disabled {
+            display: none;
+        }
+
+        .cart-slider .slick-prev.slick-arrow::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 71px;
+            box-shadow: -4px 0px 6px -7px #000 inset;
+            position: absolute;
+            top: -27px;
+            left: -10px;
+            z-index: 10;
+            opacity: 1;
+        }
+
+        .cart-slider .slick-next.slick-arrow::before {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 71px;
+            box-shadow: -4px 0px 6px -7px #000 inset;
+            position: absolute;
+            top: -27px;
+            right: 25px;
+            opacity: 1;
+        }
+
+        /*.slider-shadow .cart-slider::after,*/
+        /*.slider-shadow .cart-slider::before {*/
+        .slider-shadow {
+            display: block;
+        }
+
+        .cart-slider__item {
+            position: relative; /*for hover*/
+        }
+
+        .cart-slider-item__delete {
+            display: none;
+            width: 20px;
+            height: 20px;
+            background: #ff4157 url("/local/templates/bd_deliverysushi_s1/images/svg/delete.svg") center center no-repeat;
+            border-radius: 50%;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+        }
+
+        .slick-slide img {
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .cart-slider__item:hover img {
+            opacity: 1;
+        }
+
+        .cart-slider__item:hover {
+            cursor: pointer;
+        }
+
+        .cart-slider__item:hover .cart-slider-item__delete {
+            display: block;
+        }
+
+        .cart-slider__item:first-child:hover .cart-slider-item__delete {
+            display: none;
+        }
+
+        .cart-slider__item.slick-slide {
+            display: inline-block;
+            width: 72px;
+            height: 116px;
+            margin-right: 16px;
+        }
+
+        .cart-slider__item.slick-slide:first-child {
+            height: 72px;
+        }
+
+        .cart-slider__item:last-child {
+            margin-right: 0;
+        }
+
+        .slick-list,
+        .slick-track {
+            height: 116px;
+            padding: 10px 0;
+        }
+
+
+        .cart-clider-item__wrap {
+            height: 72px;
+            border: solid 1px #f6f6f6;
+        }
+
+        .cart-slider-item__price {
+            font-family: 'Roboto', Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            font-style: normal;
+            color: #292f32;
+        }
+
+        .cart-slider__catalog-item {
+            display: block;
+            width: 72px;
+            height: 72px;
+            border: solid 1px #f6f6f6;
+            background: #ffffff url("/local/templates/bd_deliverysushi_s1/images/svg/add.svg") center center no-repeat;
+        }
+
+        .cart-slider__catalog-item:hover {
+            text-decoration: none;
+        }
+
+        .cart-slider__catalog-item:focus {
+            outline: none;
+        }
+
+        .cart-notice {
+            display: block;
+            border-radius: 2px;
+            background-color: #ffe69d;
+            font-family: 'Roboto', Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            font-style: italic;
+            color: #352907;
+            margin: 22px 0 44px;
+            padding: 3px 12px;
+            width: 375px;
+        }
+
+        .cart-title--margin {
+            margin-bottom: 36px;
+        }
+
+        .cart-subtitle {
+            font-family: 'Roboto', Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            font-style: normal;
+            color: #292f32;
+            margin-bottom: 24px;
+        }
+
+        .cart-form {
+            position: relative;
+        }
+
+        .cart-form__label {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+            margin-bottom: 0;
+        }
+
+        .cart-from__input {
+            display: block;
+            width: 188px;
+            height: 40px;
+            border-radius: 3px;
+            border: solid 1px #d5dae3;
+            background-color: #ffffff;
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+            margin-top: 10px;
+            padding: 10px 15px;
+        }
+
+        .cart-from__input::-webkit-input-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .cart-from__input:-moz-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .cart-from__input::-moz-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .cart-from__input:-ms-input-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .cart-from__input:focus::-webkit-input-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .cart-from__input:focus:-moz-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .cart-from__input:focus::-moz-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .cart-from__input:focus:-ms-input-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .cart-from__input-tel {
+            margin-bottom: 10px;
+        }
+
+        .cart-form-label__span {
+            display: block;
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            font-style: normal;
+            color: #696d6f;
+            margin-bottom: 20px;
+        }
+
+        .cart-from-buttons {
+            width: 120px;
+            height: 40px;
+            border-radius: 2px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .cart-from-buttons__btn {
+            display: block;
+            width: 32px;
+            height: 40px;
+            background-image: linear-gradient(to bottom, #ffffff, #f2f4f9);
+            border: solid 1px #d5dae3;
+            text-align: center;
+            line-height: 38px;
+        }
+
+        .cart-from-buttons__btn:hover {
+            text-decoration: none;
+        }
+
+        .cart-from-buttons__minus,
+        .cart-from-buttons__plus {
+            position: relative; /*pseudoelement*/
+        }
+
+        .cart-from-buttons__minus {
+            pointer-events: none;
+            border-radius: 2px 0 0 2px;
+            background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+        }
+
+        .cart-from-buttons__plus {
+            border-radius: 0 2px 2px 0;
+        }
+
+        .cart-from-buttons__minus::before {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 40px;
+            background: url('/local/templates/bd_deliverysushi_s1/images/svg/minus.svg') center center no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .cart-from-buttons__plus::before {
+            background: url('/local/templates/bd_deliverysushi_s1/images/svg/plus.svg') center center no-repeat;
+            content: '';
+            display: block;
+            width: 32px;
+            height: 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .cart-from-buttons__minus.active {
+            pointer-events: auto;
+            background-image: linear-gradient(to bottom, #ffffff, #f2f4f9);
+        }
+
+        .cart-from-buttons__minus.active::before {
+            background: url('/local/templates/bd_deliverysushi_s1/images/svg/minus2.svg') center center no-repeat;
+        }
+
+        .cart-from-buttons__minus:hover {
+            cursor: default;
+        }
+
+        .cart-from-buttons__minus.active:hover {
+            cursor: pointer;
+        }
+
+        .cart-from-buttons__number {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            text-align: center;
+            color: #000000;
+            border-top: solid 1px #d5dae3;
+            border-bottom: solid 1px #d5dae3;
+            display: block;
+            width: 56px;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .cart-form-addblock {
+            display: none;
+        }
+
+        .cart-form-addblock.active {
+            display: block;
+        }
+
+        .cart-form-footer {
+            height: 156px;
+            /*height: auto;*/
+            /*padding-top: 32px;*/
+            margin-top: 25px;
+            /*position: relative; !*pseudoelement*!*/
+        }
+
+        .cart-form-footer-absolute {
+            background: #ffffff;
+        }
+
+        .cart-form-footer-absolute.active {
+            position: fixed;
+            bottom: 0;
+            /*right: 0;*/
+            /*right: 17px;*/
+            width: 465px;
+            height: auto;
+            padding: 35px 32px;
+            box-shadow: 0 -6px 16px -9px rgba(41, 46, 80, 0.3);
+        }
+
+        .box-shadow {
+            display: block;
+            width: 114%;
+            height: 50px;
+
+            position: absolute;
+            top: 0;
+            left: -27px;
+        }
+
+        .cart-form-footer--full .cart-form-footer::before{
+            display: none;
+        }
+
+        .cart-form-footer-order {
+            margin-bottom: 10px;
+        }
+
+        .cart-form-footer-order__btn {
+            width: 204px;
+            height: 48px;
+            border-radius: 2px;
+            border: solid 1px #37c04f;
+            background-color: #40d55a;
+            font-family: 'Roboto-medium', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-style: normal;
+            text-align: center;
+            color: #ffffff;
+            margin-right: 15px;
+            opacity: 1;
+        }
+
+        .cart-form-footer-order__btn:hover {
+            background: #48E764;
+            border: 1px solid #3ACD53;
+            border-radius: 2px;
+            -webkit-transition: background-color 0.3s ease;
+            -moz-transition: background-color 0.3s ease;
+            -ms-transition: background-color 0.3s ease;
+            -o-transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease;
+        }
+
+        .cart-form-footer-order__btn.disabled {
+            opacity: 0.5;
+        }
+
+        .cart-form-footer-order__btn:focus {
+            outline: none;
+        }
+
+        .cart-form-footer-order__text, .cart-form-footer__error, .cart-form-footer__policy {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+        }
+
+        .cart-form-footer__error, .cart-form-footer__policy {
+            display: block;
+            font-size: 14px;
+            color: #696d6f;
+        }
+
+        .cart-form-footer__error {
+            margin-bottom: 15px;
+            line-height: 20px;
+        }
+
+        .cart-form-footer-policy__link {
+            color: #ff4157;
+        }
+
+        .cart-form-footer-policy__link:hover {
+            color: #ff4157;
+            text-decoration: underline;
+        }
+
+        .cart-form__code {
+            display: none;
+        }
+
+        .cart-form__code.active {
+            display: block;
+        }
+
+        .cart-form-code__text {
+            display: none;
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            font-style: normal;
+            color: #ff4157;
+            border-bottom: 1px dashed #ff4157;
+            text-decoration: none;
+        }
+
+        .cart-form-code__text.active {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .cart-form-code__text:hover,
+        .cart-form-code__text:active {
+            color: #ff4157;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .cart-from__input-code {
+            width: 72px;
+            margin-top: 0;
+            margin-right: 15px;
+        }
+
+        .cart-form-label__span-code {
+            display: none;
+            margin-bottom: 0;
+            width: 200px;
+        }
+
+        .cart-form-label__span-code.active {
+            display: block;
+        }
+
+        .cart-form-label__wrap {
+            display: flex;
+            margin: 10px 0 22px;
+        }
+
+        .cart-form-bonusblock {
+            margin-top: 30px;
+            margin-bottom: 44px;
+        }
+
+        .cart-form__bonus {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .cart-from__checkbox {
+            /*display: none;*/
+            position: absolute;
+            opacity: 0;
+        }
+
+        .cart-from__checkbox-text {
+            padding-left: 35px;
+            position: relative; /*for checkbox*/
+        }
+
+        .cart-from__checkbox-text::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            border: solid 1px #d5dae3;
+            background-color: #ffffff;
+            /*border: solid 1px #37c04f;*/
+            /*background: #40d55a;*/
+            position: absolute;
+            top: 2px;
+            left: 0;
+        }
+
+        .cart-from__checkbox:checked + .cart-from__checkbox-text::before {
+            background: #40d55a url("/local/templates/bd_deliverysushi_s1/images/svg/check.svg ") center center no-repeat;
+            border: solid 1px #37c04f;
+        }
+
+        .cart-form-bonusblock__label {
+            display: block;
+
+        }
+
+        .cart-form-bonusblock__wrap input {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .cart-form-bonusblock__wrap {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .cart-from__checkbox:checked ~ .cart-form-bonusblock__wrap {
+            display: block;
+        }
+
+        .cart-form-delivery {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 22px;
+        }
+
+        .cart-form-delivery__link,
+        .cart-form-pay-link {
+            display: block;
+            width: 144px;
+            height: 40px;
+            border: solid 1px #f82d45;
+            background-color: #ffffff;
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            font-style: normal;
+            text-align: center;
+            color: #ff4157;
+            line-height: 37px;
+        }
+
+        .cart-form-delivery__link-cur,
+        .cart-form-pay-link__card {
+            border-radius: 2px 0 0 2px;
+        }
+
+        .cart-form-delivery__link-self,
+        .cart-form-pay-link__cash {
+            border-radius: 0 2px 2px 0;
+        }
+
+        .cart-form-delivery__link:hover,
+        .cart-form-pay-link:hover {
+            background-color: rgba(255, 65, 87, 0.1);
+            border: solid 1px rgba(255, 65, 87, 0.3);
+            -webkit-transition: background-color 0.3s ease;
+            -moz-transition: background-color 0.3s ease;
+            -ms-transition: background-color 0.3s ease;
+            -o-transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            color: #ff4157;
+        }
+
+        .cart-form-delivery__link.active,
+        .cart-form-pay-link.active {
+            background-color: #ff4157;
+            color: #ffffff;
+            -webkit-transition: background-color 0.3s ease, color 0.3s ease;
+            -moz-transition: background-color 0.3s ease, color 0.3s ease;
+            -ms-transition: background-color 0.3s ease, color 0.3s ease;
+            -o-transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cart-form-delivery-content {
+            display: none;
+        }
+
+        .cart-form-delivery-content.active{
+            display: block;
+        }
+
+        .sod_select {
+            font-size: 16px;
+            font-stretch: normal;
+        }
+
+        .cart-form-delivery-content .sod_select,
+        .delivery-time .sod_select {
+            display: block;
+            width: 100%;
+            height: 40px;
+            border-radius: 2px;
+            border: solid 1px #d5dae3;
+            background-image: linear-gradient(to bottom, #ffffff, #f2f4f9);
+            padding: 0 15px;
+            margin-bottom: 22px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            line-height: 38px;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_placeholder,
+        .delivery-time .sod_select .sod_placeholder,
+        .cart-form-delivery-content .sod_select .sod_option {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+        }
+
+        .cart-form-delivery-content .sod_select::before,
+        .delivery-time .sod_select::before {
+            top: 55%;
+            right: 20px;
+            background: url("/local/templates/bd_deliverysushi_s1/images/svg/arrow2.svg") center center no-repeat;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_list_wrapper {
+            top: 45px;
+            border-radius: 4px;
+            box-shadow: 0 2px 16px 0 rgba(41, 46, 80, 0.3);
+            border: none;
+            background-color: #ffffff;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_option,
+        .delivery-time .sod_select .sod_option {
+            height: 40px;
+            line-height: 20px;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_option:nth-child(2),
+        .delivery-time .sod_select .sod_option:nth-child(2) {
+            margin-top: 8px;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_option:last-child,
+        .delivery-time .sod_select .sod_option:last-child {
+            margin-bottom: 8px;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_option:hover,
+        .delivery-time .sod_select .sod_option:hover {
+            background-color: #e1f0ff;
+        }
+
+
+        .cart-form-delivery-content .sod_select .sod_option.selected {
+            background-color: #edeef0;
+        }
+
+        .cart-form-delivery-content .sod_select .sod_option.selected::before,
+        .delivery-time .sod_select .sod_option.selected::before {
+            display: none;
+        }
+
+        .cart-form-address-label,
+        .cart-from__address {
+            width: 100%;
+        }
+
+        .cart-from__address {
+            margin-bottom: 10px;
+        }
+
+        .cart-from__input:focus,
+        .cart-from__address:focus,
+        .cart-from__textarea:focus,
+        .cart-form-bonusblock__label input:focus {
+            box-shadow:
+                    0 0 0 1px #41a5ff,
+                    0 0 0 4px rgba(65, 165, 255, 0.3);
+        }
+
+        .cart-from__input-code.error {
+            background: #FFFFFF;
+            box-shadow:
+                    0 0 0 1px #FF4157,
+                    0 0 0 4px rgba(255,65,87,0.30);
+            border-radius: 2px;
+        }
+
+        .cart-from__number::-webkit-outer-spin-button,
+        .cart-from__number::-webkit-inner-spin-button {
+            /* display: none; <- Crashes Chrome on hover */
+            -webkit-appearance: none;
+            margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+        }
+
+        input[type='number'] {
+            -moz-appearance:textfield;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .cart-form__delivery-label {
+            position: relative; /*for delivery-time*/
+            margin: 20px 0;
+        }
+
+        .delivery-link {
+            color: #ff4157;
+            border-bottom: 1px dashed #ff4157;
+            text-decoration: none;
+            line-height: 20px;
+        }
+
+        .delivery-link:hover,
+        .delivery-link:active,
+        .delivery-link:visited,
+        .delivery-link:focus {
+            color: #ff4157;
+            text-decoration: none;
+        }
+
+        .delivery-time {
+            position: absolute;
+            display: none;
+            width: 290px;
+            height: 124px;
+            border-radius: 4px;
+            box-shadow: 0 2px 16px 0 rgba(41, 46, 80, 0.3);
+            border: solid 1px #ffffff;
+            background-color: #ffffff;
+            padding: 20px;
+            font-family:  'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+            top: 26px;
+            right: 0;
+        }
+
+        .delivery-time.active {
+            display: flex;
+        }
+
+        .delivery-time__date, .delivery-time__time {
+            margin-bottom: 0;
+        }
+
+        .delivery-time__select {
+            display: block;
+        }
+
+        .delivery-time .sod_select {
+            width: 150px;
+            height: 40px;
+            border-radius: 3px;
+            border: solid 1px #d5dae3;
+            background-image: linear-gradient(to bottom, #ffffff, #f2f4f9);
+            padding-left: 15px;
+            margin-top: 8px;
+            margin-right: 15px;
+        }
+
+        .delivery-time__input {
+            width: 82px;
+            height: 40px;
+            border-radius: 3px;
+            border: solid 1px #d5dae3;
+            padding: 0 15px;
+            margin-top: 8px;
+            text-align: center;
+            color: #000;
+        }
+
+        .delivery-time__input::-webkit-input-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+        }
+
+        .delivery-time__input:-moz-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+        }
+
+        .delivery-time__input::-moz-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+        }
+
+        .delivery-time__input:-ms-input-placeholder {
+            font-family: 'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            color: #000000;
+        }
+
+        .delivery-time__input:focus::-webkit-input-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .delivery-time__input:focus:-moz-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .delivery-time__input:focus::-moz-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .delivery-time__input:focus:-ms-input-placeholder {
+            opacity:0;
+            -webkit-transition: opacity 0.5s ease;
+            -moz-transition: opacity 0.5s ease;
+            -ms-transition: opacity 0.5s ease;
+            -o-transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease;
+        }
+
+        .cart-from__textarea {
+            margin: 10px 0 7px;
+            width: 100%;
+            height: 88px;
+            border-radius: 2px;
+            border: solid 1px #d5dae3;
+            background-color: #ffffff;
+            padding: 10px;
+        }
+
+        .cart-from-textarea-span {
+            margin-bottom: 40px;
+        }
+
+        .cart-form-delivery-self__label,
+        .cart-form-shops__label,
+        .cart-form-delivery-curier__label{
+            margin-bottom: 10px;
+        }
+
+        .cart-form-pay {
+            margin-bottom: 50px;
+        }
+
+        .cart-form-pay-link {
+            height: 80px;
+            line-height: 1.43;
+            padding: 10px 15px;
+            text-align: left;
+        }
+
+        .cart-form-shops__select {
+            margin-bottom: 10px;
+        }
+
+        .modal-cart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: none;
+            width: 464px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 16px 0 rgba(41, 46, 80, 0.3);
+            background-color: #ffffff;
+            padding: 140px 32px 60px;
+            z-index: 200;
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        .modal-cart div {
+            position: relative; /*for close*/
+        }
+
+        .popup-close2 {
+            z-index: 205;
+            right: -20px;
+            top: -128px;
+        }
+
+        .modal-title {
+            font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
+            font-size: 32px;
+            font-weight: bold;
+            font-style: normal;
+            text-align: center;
+            color: #292f32;
+            margin-bottom: 17px;
+            position: relative; /*pseudoelement*/
+        }
+
+        .modal-title::before {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 48px;
+            background:  #ff4157 url("/local/templates/bd_deliverysushi_s1/images/svg/check2.svg") center center no-repeat;
+            position: absolute;
+            top: -80px;
+            left: 180px;
+            border-radius: 50%;
+        }
+
+        .modal-text {
+            font-family:  'OpenSans', Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-style: normal;
+            text-align: center;
+            color: #000000;
+            margin-bottom: 24px;
+        }
+
+        .modal-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-address {
+            color: #ff4157;
+            border-bottom: 1px solid rgba(255, 65, 87, 0.6);
+        }
+
+        /*end popup cart*/
+    </style>
+</head>
+<body>
+<div class="popup-overlay">
+    <div id="popup-cart" class="popup-cart">
+        <span class="popup-close"></span>
+        <h3 class="cart-title">Корзина</h3>
+
+        <div class="cart-slider-wrap">
+            <div class="cart-slider">
+                <div class="cart-slider__item cart-slider__item1">
+                    <a href="/menu/" class="cart-slider__catalog-item"></a>
+                </div>
+            </div>
+            <div class="cart-slider__navigation cart-slider-arrows"></div>
+        </div>
+
+        <span class="cart-notice">В заказ входят: имбирь, васаби, соевый соус, палочки</span>
+
+        <h4 class="cart-title cart-title--margin">Оформление заказа</h4>
+
+        <form action="#" method="post" class="cart-form">
+            <p class="cart-subtitle">Покупатель</p>
+
+            <label class="cart-form__label">Мобильный телефон
+                <input type="tel" name="cart_tel" placeholder="+7 (000) 000-00-00" class="cart-from__input cart-from__input-tel cart-input-js cookie-js">
+            </label>
+            <span class="cart-form-label__span">Для подтверждения заказа</span>
+
+
+            <label class="cart-form__label cart-form__code">Код из SMS
+                <span class="cart-form-label__wrap">
+			<input type="number" maxlength="4" name="cart_code" placeholder="0000" class="cart-from__input cart-from__input-code cart-input-js cookie-js">
+			<span class="cart-form-label__span cart-form-label__span-code active">Через <span class="timer">12</span> сек. можно будет выслать код ещё раз</span>
+			<a href="#" class="cart-form-code__text">выслать код ещё раз</a>
+		</span>
+            </label>
+
+            <div class="cart-form__label">Количество персон
+                <div class="cart-from-buttons">
+                    <a href="#" class="cart-from-buttons__btn cart-from-buttons__minus"></a>
+                    <span class="cart-from-buttons__number">1</span>
+                    <a href="#" class="cart-from-buttons__btn cart-from-buttons__plus"></a>
+                </div>
+            </div>
+
+
+            <!--	<div class="cart-form-addblock">-->
+            <div class="cart-form-bonusblock">
+                <input type="checkbox" name="cart_bonus" class="cart-from__checkbox cookie-js" id="bonus">
+                <label class="cart-form__label cart-from__checkbox-text cart-form__bonus" for="bonus">Получить бонусную карту</label>
+                <!--                <span class="cart-from__checkbox-text"></span>-->
+                <div class="cart-form-bonusblock__wrap">
+                    <label class="cart-form__label cart-form-bonusblock__label">ФИО</label>
+                    <input type="text" name="bonus_name" class="cart-from__input cart-form__input-fio cart-input-js cookie-js">
+                    <label class="cart-form__label cart-form-bonusblock__label">Дата рождения</label>
+                    <input type="text" name="bonus_date" class="cart-from__input cart-from__input-birth cart-input-js cookie-js" placeholder="01.01.2000">
+                    <label class="cart-form__label cart-form-bonusblock__label">E-mail</label>
+                    <input type="email" name="bonus_email" class="cart-from__input cart-form__input-email cart-input-js cookie-js">
+                </div>
+                <!--            </label>-->
+            </div>
+
+            <p class="cart-subtitle">Доставка</p>
+
+            <div class="cart-form__label">Способ доставки
+                <?php if(\COption::GetOptionString('bd.deliverysushi', 'BD_SUB_MODULE_PICKUP_ENABLED','',SITE_ID) == 'Y'): ?>
+                <ul class="cart-form-delivery">
+                    <li class="cart-form-delivery__item cart-form-delivery__item--js">
+                        <a href="#" data-type="1" class="cart-form-delivery__link <?php if(!isset($_SESSION['USE_PICKUP_DISCOUNT']) || $_SESSION['USE_PICKUP_DISCOUNT']==0): ?>active <?php endif; ?>cart-form-delivery__link-cur"><?= GetMessage("checkout_delivery_type_courier"); ?></a>
+                    </li>
+                    <li class="cart-form-delivery__item cart-form-delivery__item--js">
+                        <a href="#" data-type="2" class="cart-form-delivery__link <?php if(isset($_SESSION['USE_PICKUP_DISCOUNT']) && $_SESSION['USE_PICKUP_DISCOUNT']>0): ?>active <?php endif; ?>cart-form-delivery__link-self"><?= GetMessage("checkout_delivery_type_take_away"); ?></a>
+                    </li>
+                </ul>
+                <?php endif; ?>
+
+                <div class="cart-form-delivery-content cart-form-delivery-curier active">
+                    <label class="cart-form__label cart-form-delivery-curier__label">Район</label>
+                    <select name="district" class="cart-form-delivery-curier__select cart-form-district__select cookie-select">
+                        <option value=""><?= GetMessage("checkout_delivery_destrict")?></option>
+                        <?foreach ($arResult["DESTRICT"] as $key => $DESTRICT): ?>
+                        <option value="<?= $DESTRICT['ID'] ?>"><?= $DESTRICT['NAME'] ?></option>
+                        <?endforeach; ?>
+                    </select>
+
+                    <label class="cart-form__label cart-form-address-label">Улица</label>
+                    <input type="text" name="cart_street" class="cart-from__input cart-from__address cart-input-js cookie-js">
+
+                    <label class="cart-form__label cart-form-address-label">Дом</label>
+                    <input type="text" name="cart_house" class="cart-from__input cart-from__address cart-from__number cart-input-js cookie-js">
+
+                    <label class="cart-form__label cart-form-address-label">Квартира</label>
+                    <input type="text" name="cart_app" min="0" class="cart-from__input cart-from__address cart-from__number cart-input-js cookie-js">
+
+
+                    <div class="cart-form__label cart-form__delivery-label">Привезём заказ <a href="#" class="delivery-link delivery-link--js">сегодня в ближайшее время</a>
+                        <div class="delivery-time delivery-time--js">
+                            <div>
+                                <label class="delivery-time__date">Дата</label>
+                                <select name="date" class="delivery-time__select cookie-select">
+                                    <option value="null" disabled>Выбрать дату</option>
+                                    <?
+								$iteration = 3;
+								if(\COption::GetOptionString('bd.deliverysushi','BD_SITE_TIMEZONE_OFFSET', '', SITE_ID) == '0' || \COption::GetOptionString('bd.deliverysushi','BD_SITE_TIMEZONE_OFFSET', '', SITE_ID) == ''){
+								 $time = time();
+								}else{
+									$time = strtotime(\COption::GetOptionString('bd.deliverysushi','BD_SITE_TIMEZONE_OFFSET', '', SITE_ID).' hour');
+								}
+								for ($i=0;$i<=$iteration;$i++){
+									?>
+                                    <option value="<? echo FormatDate("j F",time()+($i*86400)); ?>"><?= ($i == 0 ? "Сегодня" : ($i == 1 ? "Завтра" : FormatDate("j F",$time+($i*86400)))) ?></option>
+                                    <?
+								}
+								?>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="delivery-time__time">Время</label>
+                                <input type="text" name="cart_time" maxlength="5" placeholder="14:05" class="delivery-time__input delivery-time__input--js cookie-js" value="">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <label class="cart-form__label cart-form__label-textarea">Комментарий к заказу</label>
+                    <textarea class="cart-from__textarea cookie-js" name="comment-curier"></textarea>
+                    <span class="cart-form-label__span cart-from-textarea-span">Любая информация, которая поможет вам получить заказ с улыбкой: «домофон 25», «позвонить за 20 минут» и т.д.</span>
+
+                </div>
+
+                <div class="cart-form-delivery-content cart-form-delivery-self">
+                    <label class="cart-form__label cart-form-delivery-self__label">Район</label>
+                    <select name="district" class="cart-form-delivery-self__select cookie-select">
+                        <option value="" ><?= GetMessage("checkout_delivery_destrict")?></option>
+                        <?foreach ($arResult["DESTRICT"] as $key => $DESTRICT): ?>
+                        <option value="<?= $DESTRICT['ID'] ?>"><?= $DESTRICT['NAME'] ?></option>
+                        <?endforeach; ?>
+                    </select>
+
+                    <label class="cart-form__label cart-form-shops__label">Адрес магазина</label>
+                    <select name="shopSelector" class="cart-form-delivery-self__select cart-form-shops__select cart-input-js required cookie-select">
+                        <option value=""><?= GetMessage("checkout_delivery_take_away_where"); ?></option>
+                        <?foreach ($arResult["TAKE_AWAY"] as $TAKE_AWAY):?>
+                        <option data-coordinate="<?php echo $TAKE_AWAY['COORDINATE']; ?>"
+                                value="<?= $TAKE_AWAY['ID'] ?>"><?= $TAKE_AWAY['NAME'] ?></option>
+                        <?endforeach;?>
+                    </select>
+                    <span class="cart-form-label__span">Режим работы с 10:00 до 23:00</span>
+
+                    <div class="cart-form__label cart-form__delivery-label">Заберите заказ <a href="#" class="delivery-link delivery-link--js2">сегодня в ближайшее время</a>
+                        <div class="delivery-time delivery-time--js2">
+                            <div>
+                                <label class="delivery-time__date">Дата</label>
+                                <select name="date" class="delivery-time__select cookie-select">
+                                    <option value="null" disabled>Выбрать дату</option>
+                                    <?
+                                $iteration = 3;
+                                if(\COption::GetOptionString('bd.deliverysushi','BD_SITE_TIMEZONE_OFFSET', '', SITE_ID) == '0' || \COption::GetOptionString('bd.deliverysushi','BD_SITE_TIMEZONE_OFFSET', '', SITE_ID) == ''){
+                                    $time = time();
+                                }else{
+                                    $time = strtotime(\COption::GetOptionString('bd.deliverysushi','BD_SITE_TIMEZONE_OFFSET', '', SITE_ID).' hour');
+                                }
+                                for ($i=0;$i<=$iteration;$i++){
+                                    ?>
+                                    <option value="<? echo FormatDate("j F",time()+($i*86400)); ?>"><?= ($i == 0 ? "Сегодня" : ($i == 1 ? "Завтра" : FormatDate("j F",$time+($i*86400)))) ?></option>
+                                    <?
+                                }
+                                ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="delivery-time__time">Время</label>
+                                <input type="text" name="cart_time" maxlength="5" placeholder="14:05" class="delivery-time__input delivery-time__input--js2 cookie-js" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="cart-form__label cart-form__label-textarea">Комментарий к заказу</label>
+                    <textarea class="cart-from__textarea cookie-js" name="comment-delivery"></textarea>
+                    <span class="cart-form-label__span cart-from-textarea-span">Любая информация, которая поможет вам получить заказ с улыбкой: «домофон 25», «позвонить за 20 минут»  и т.д.</span>
+
+                </div>
+            </div>
+
+            <p class="cart-subtitle">Оплата</p>
+
+            <div class="cart-form__label">Способ оплаты
+                <ul class="cart-form-delivery cart-form-pay">
+                    <li class="cart-form-delivery__item">
+                        <a href="#" data-type="<?php echo $arResult["PAYSYS"][2]['IDENT_PAY']; ?>" data-change="<?php echo $arResult["PAYSYS"][2]['CHANGE']; ?>"  value="<?= $arResult["PAYSYS"][2]['ID'] ?>" class="cart-form-pay-link active cart-form-pay-link__card">На сайте<br> банк. картой</a>
+                    </li>
+                    <li class="cart-form-delivery__item">
+                        <a href="#" data-type="<?php echo $arResult["PAYSYS"][0]['IDENT_PAY']; ?>" data-change="<?php echo $arResult["PAYSYS"][0]['CHANGE']; ?>"  value="<?= $arResult["PAYSYS"][0]['ID'] ?>" class="cart-form-pay-link cart-form-pay-link__cash">При получении картой или наличными</a>
+                    </li>
+                </ul>
+            </div>
+            <!--	</div>-->
+
+            <div class="cart-form-footer">
+                <div class="cart-form-footer-absolute active">
+                    <div class="cart-form-footer-order">
+                        <button class="cart-form-footer-order__btn disabled" disabled type="submit">Оформить заказ</button>
+                        <span class="cart-form-footer-order__text">К оплате <span class="cart-form-footer-order__sum"><?php echo $_SESSION['BASKET_SUM']; ?></span> руб.</span>
+                    </div>
+                    <span class="cart-form-footer__error">Заполните все поля</span>
+                </div>
+                <span class="cart-form-footer__policy">Нажимая на кнопку, вы даёте <a href="#" class="cart-form-footer-policy__link" target="_blank">согласие</a> на обработку персональных данных и соглашаетесь с политикой конфиденциальных данных</span>
+            </div>
+        </form>
+    </div>
+
+    <div id="modal" class="modal-cart">
+        <div>
+            <span class="popup-close2"></span>
+            <h3 class="modal-title">Спасибо за заказ</h3>
+            <p class="modal-text modal-text-js">Заказ можно забрать <span class="modal-time">сегодня в 17:00</span> по адресу: <br><span class="modal-address">ул. Михаила Годенко, 1</span></p>
+            <p class="modal-text">Если вы хотите изменить заказ, позвоните: <br>+7 (391) 214-30-20</p>
+        </div>
+    </div>
+    <div id="modal2" class="modal-cart">
+        <div>
+            <span class="popup-close2"></span>
+            <h3 class="modal-title">Спасибо за заказ</h3>
+            <p class="modal-text modal-text-js">Пришлём SMS, когда заказ будет готов</p>
+            <p class="modal-text">Если вы хотите изменить заказ, позвоните: <br>+7 (391) 214-30-20</p>
+        </div>
+    </div>
+</div>
+<script>
+    var activeTab = 0;
+    $(document).ready(function () {
+        /*cookie*/
+        function setCookie(form) {
+            var arrFileds = $(form).serializeArray();
+
+            for (var i = 0; i < arrFileds.length; i++) {
+                if(arrFileds[i]['value'].trim() != "") {
+                    document.cookie = arrFileds[i]['name'] + "=" + arrFileds[i]['value'];
+                }
+            }
+        }
+
+        function getCookie(name) {
+            var cookie = " " + document.cookie;
+            var search = " " + name + "=";
+            var setStr = false;
+            var offset = 0;
+            var end = 0;
+            if (cookie.length > 0) {
+                offset = cookie.indexOf(search);
+                if (offset != -1) {
+                    offset += search.length;
+                    end = cookie.indexOf(";", offset)
+                    if (end == -1) {
+                        end = cookie.length;
+                    }
+                    setStr = unescape(cookie.substring(offset, end));
+                }
+            }
+            return(setStr);
+        }
+
+        function fillFileds() {
+            //все поля, кроме селектов
+            $('.cookie-js').each(function () {
+                var name = $(this).attr('name');
+                if(getCookie(name)) {
+                    $(this).val(getCookie(name));
+                    $(this).valid();
+                    $(this).keyup();
+                }
+            });
+
+            //обработка селектов
+            $('.cookie-select').each(function () {
+                var name = $(this).attr('name');
+                if(getCookie(name)) {
+                    $(this).children('option[value='+'"'+getCookie(name)+'"'+']').prop('selected', true);
+                    $('.cart-form-delivery-self__select').addClass('valid');
+                    window.adressSelectisValid = $('.cart-form-delivery-self__select').valid();
+                    // $(this).valid();
+                    $(this).selectOrDie("update");
+                    // $(this).click();
+                    $(this).keyup();
+                }
+            })
+        }
+        /*cookie*/
+
+        $('.gift-item .modal-close').on('click', function () {
+            var $self = $(this);
+            $self.closest('.gift-item-message').attr('style', 'display:none');
+            setTimeout(function () {
+                $self.closest('.gift-item-message').removeAttr('style');
+            }, 300);
+        });
+
+        // Инициализация слайдера
+        $('.cart-slider').slick({
+            arrows: true,
+            // appendArrows: $('.cart-slider-arrows'),
+            infinite: false,
+            dots: false,
+            slidesToShow: 4,
+            slidesToScroll: 3,
+            variableWidth: true
+        });
+
+        /*-------------------------------------------popup cart---------------------------------------------*/
+        //определение ширины скроллы
+        function scrollbarWidth() {
+            var documentWidth = parseInt(document.documentElement.clientWidth);
+            var windowsWidth = parseInt(window.innerWidth);
+            var scrollbarWidth = windowsWidth - documentWidth;
+            return scrollbarWidth + 'px';
+        }
+
+        //открыть
+        if($('.basket-btn') && $('.basket-btn').length) {
+            $('.basket-btn').on('click', function(e){
+                event.preventDefault();
+
+                renderBasket();
+
+                if($('.cart-slider__item').length >= 5) {
+                    console.log($('.cart-slider__item').length);
+                    $('.slider-shadow--right').addClass('slider-shadow');
+                }
+                var widthScroll = scrollbarWidth();
+                $('.popup-overlay').fadeIn(400);
+
+                //заполнение полей куки
+                fillFileds();
+
+                $('#popover-basket').css('display', 'none');
+
+                $('body').addClass('open-modal').css('padding-right', widthScroll);
+                $('.cart-form-footer-absolute.active').css('right', widthScroll);
+            });
+        }
+
+        //закрыть
+        $(document).mousedown(function (e){ // событие клика по веб-документу
+            var div = $("#popup-cart"); // тут указываем ID элемента
+            if (!div.is(e.target) // если клик был не по нашему блоку
+                && div.has(e.target).length === 0) { // и не по его дочерним элементам
+                $('.popup-overlay').fadeOut(200);
+                $('body').removeClass('open-modal').css('padding-right', '0');
+
+                //устанавливаем куки
+                setCookie('.cart-form');
+            }
+        });
+        $('.popup-close').on('click', function () {
+            $('.popup-overlay').fadeOut(200);
+            $('body').removeClass('open-modal').css('padding-right', '0');
+
+            //устанавливаем куки
+            setCookie('.cart-form');
+        })
+
+        /*-------------------------------------блок Оформить заказ----------------------------------*/
+        var priceBlock =  $('.cart-form-footer-absolute');
+        var footerBlock = $('.cart-form-footer');
+
+        $('.popup-overlay').scroll(function(){
+            var nsc = $('.popup-overlay').scrollTop();
+            var priceTop = priceBlock.offset().top;
+            var footerTop = footerBlock.offset().top - 20;
+
+            if (nsc > footerTop) {
+                priceBlock.removeClass('active');
+            }
+            else {
+                priceBlock.addClass('active');
+            }
+        });
+
+
+        //=====================маска на телефон========================//
+        if($('.cart-from__input-tel') && $('.cart-from__input-tel').length > 0) {
+            $('.cart-from__input-tel').mask('+7 (999) 999-99-99');
+        }
+        //=====================маска на код========================//
+        if($('.cart-from__input-code') && $('.cart-from__input-code').length > 0) {
+            $('.cart-from__input-code').mask('9999');
+        }
+        //=====================маска на время========================//
+        if($('.delivery-time__input') && $('.delivery-time__input').length > 0) {
+            $('.delivery-time__input').mask('00:00');
+        }
+        //=====================маска на дату рождения========================//
+        if($('.cart-from__input-birth') && $('.cart-from__input-birth').length > 0) {
+            $('.cart-from__input-birth').mask('99.99.9999');
+        }
+
+        /*---------------------------------количество персон-----------------------------------*/
+        $('.cart-from-buttons__plus').on('click', function (event) {
+            event.preventDefault();
+
+            var number = Number($('.cart-from-buttons__number').text());
+            var newNumber = number + 1;
+            $('.cart-from-buttons__number').text(newNumber);
+            if(newNumber > 1) {
+                $('.cart-from-buttons__minus').addClass('active');
+            } else {
+                $('.cart-from-buttons__minus').removeClass('active');
+            }
+        });
+
+        $('.cart-from-buttons__minus').on('click', function (event) {
+            event.preventDefault();
+
+            var number = Number($('.cart-from-buttons__number').text());
+            var newNumber = number - 1;
+            if(newNumber > 1) {
+                $('.cart-from-buttons__number').text(newNumber);
+                $('.cart-from-buttons__minus').addClass('active');
+            } else {
+                $('.cart-from-buttons__number').text(newNumber);
+                $('.cart-from-buttons__minus').removeClass('active');
+            }
+        });
+
+
+        //============================активная вкладка доставки===============================//
+        var currentObject = {};
+        $('.cart-form-delivery__item--js > a').on('click', function(e) {
+
+            e.preventDefault();
+            $('.cart-form-delivery__item--js > a').removeClass('active');
+            $(this).addClass('active');
+            $('.cart-form-delivery-content').removeClass('active');
+            $('.cart-form-delivery-content').find('input[type=text]').removeClass('valid').removeClass('error');
+            $('.cart-from__input-tel, .cart-from__input-code').removeClass('valid').removeClass('error');
+
+
+            if($(e.target).is('.cart-form-delivery__link-cur'))  {
+                activeTab = 0;
+                $('.cart-form-delivery-curier').addClass('active');
+                if ($("input[name='cart_bonus']").is(":checked")) {
+                    var deliveryRules = {
+                        cart_tel: {
+                            required: true,
+                            minlength: 18
+                        },
+                        cart_code: {
+                            required: true,
+                            minlength: 4
+                        },
+                        cart_street: {
+                            required: true,
+                            minlength: 2
+                        },
+                        cart_house: {
+                            required: true,
+                            minlength: 1
+                        },
+                        cart_app: {
+                            required: true,
+                            digits: true,
+                            minlength: 1
+                        },
+                        bonus_name: {
+                            required: true,
+                            minlength: 1
+                        },
+                        bonus_date: {
+                            required: true,
+                            minlength: 3
+                        },
+                        bonus_email: {
+                            required: true
+                        }
+                    };
+                } else {
+                    var deliveryRules = {
+                        cart_tel: {
+                            required: true,
+                            minlength: 18
+                        },
+                        cart_code: {
+                            required: true,
+                            minlength: 4
+                        },
+                        cart_street: {
+                            required: true,
+                            minlength: 2
+                        },
+                        cart_house: {
+                            required: true,
+                            minlength: 1
+                        },
+                        cart_app: {
+                            required: true,
+                            digits: true,
+                            minlength: 1
+                        }
+                    };
+                }
+                currentObject = validatorActivate(deliveryRules);
+            } else {
+                activeTab = 1;
+                $('.cart-form-delivery-self').addClass('active');
+                if ($("input[name='cart_bonus']").is(":checked")) {
+                    var selfCallingRules = {
+                        cart_tel: {
+                            required: true,
+                            minlength: 18
+                        },
+                        cart_code: {
+                            required: true,
+                            minlength: 4
+                        },
+                        shopSelector: {
+                            required: true
+                        },
+                        bonus_name: {
+                            required: true,
+                            minlength: 1
+                        },
+                        bonus_date: {
+                            required: true,
+                            minlength: 3
+                        },
+                        bonus_email: {
+                            required: true
+                        }
+                    }
+                } else {
+                    var selfCallingRules = {
+                        cart_tel: {
+                            required: true,
+                            minlength: 18
+                        },
+                        cart_code: {
+                            required: true,
+                            minlength: 4
+                        },
+                        shopSelector: {
+                            required: true
+                        }
+                    }
+                }
+                currentObject = validatorActivate (selfCallingRules);
+                currentObject.settings.rules = selfCallingRules;
+            }
+
+            $(".cart-form-footer-order__btn").prop('disabled', true).addClass("disabled");
+            $('.cart-form-footer__error').css('display', 'block');
+
+            //заполнение полей куки
+            fillFileds();
+        });
+
+
+        //============================активная вкладка оплаты===============================//
+        var activePayLink = false;
+        $('.cart-form-pay-link').on('click', function(e) {
+
+            e.preventDefault();
+
+            $('.cart-form-pay-link').removeClass('active');
+            $(this).addClass('active');
+
+        });
+
+        /*---------------------------------сегодня в ближайшее время-----------------------------------*/
+        $('.delivery-link--js').on('click', function(e) {
+            e.preventDefault();
+            $('.delivery-time--js').toggleClass('active');
+        });
+
+        $(document).on('click', function (event) {
+            hidePopupListener($('.delivery-time--js'), event, function () {
+                if(!$(event.target).hasClass('delivery-link--js') && $('.delivery-time.active').length) {
+                    $('.delivery-time--js').removeClass('active');
+                    if($('.delivery-time__input--js').val()) {
+                        var text = $('.delivery-time--js .sod_label').text() + ' ' + $('.delivery-time__input--js').val();
+                        $('.delivery-link--js').text(text);
+                    }
+                }
+            });
+        });
+
+        $('.delivery-link--js2').on('click', function(e) {
+            e.preventDefault();
+            $('.delivery-time--js2').toggleClass('active');
+        });
+
+        $(document).on('click', function (event) {
+            hidePopupListener($('.delivery-time--js2'), event, function () {
+                if(!$(event.target).hasClass('delivery-link--js2') && $('.delivery-time.active').length) {
+                    $('.delivery-time--js2').removeClass('active');
+                    if($('.delivery-time__input--js2').val()) {
+                        var text = $('.delivery-time--js2 .sod_label').text() + ' ' + $('.delivery-time__input--js2').val();
+                        $('.delivery-link--js2').text(text);
+                    }
+                }
+            });
+        });
+
+        /*---------------------------------валидация формы-----------------------------------*/
+
+        /*проверка количества полей*/
+        function checkInputValidFields($selector){
+            if(activeTab === 0) {
+                if ($("input[name='cart_bonus']").is(":checked")){
+                    return ($($selector).length == 8) ? true : false;
+                }
+                return ($($selector).length >= 5) ? true : false;
+            }
+            if(activeTab === 1) {
+                if ($("input[name='cart_bonus']").is(":checked")){
+                    return ($($selector).length == 6) ? true : false;
+                }
+                return ($($selector).length == 3) ? true : false;
+            }
+        }
+
+        /*
+            @param {
+                description: Обработчик селекта адреса. Присваивает значение селекта в глобальный контекст и отправляет в валидатор
+                ВНИМАНИЕ: плагины валидатора и кастомного селекта конфликтуют, поэтому выбираем селекторы полей телефона и кода СМС напрямую.
+                $selector(jquery collection): селект обработчика
+                return(): nothing
+            }
+        */
+
+        $('.cart-form-shops__select').on('change', function() {
+            if(this.value) {
+                //Проверяем, заполнены ли поля телефона и кода и принудительно добавляем класс valid селекту
+                $($(this).addClass('valid'));
+                window.adressSelectisValid = $(this).valid();
+                $('.cart-from__input-tel').valid();
+                $('.cart-from__input-code').valid();
+                //проверяем чекбокс на бонусной карте
+                if ($("input[name='cart_bonus']").is(":checked")) {
+                    if ($('.cart-from__input-tel.valid') && typeof($('.cart-from__input-tel.valid').val())!=='undefined' && $('.cart-from__input-code.valid') && typeof($('.cart-from__input-code.valid').val())!=='undefined' && $('.cart-form__input-fio.valid, .cart-from__input-birth.valid, .cart-form__input-email.valid')) {
+                        $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                        $('.cart-form-footer__error').css('display', 'none');
+                    }
+                } else {
+                    if ($('.cart-from__input-tel.valid') && typeof($('.cart-from__input-tel.valid').val())!=='undefined' && $('.cart-from__input-code.valid') && typeof($('.cart-from__input-code.valid').val())!=='undefined') {
+                        $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                        $('.cart-form-footer__error').css('display', 'none');
+                    }
+                }
+            }
+        });
+
+        function validatorActivate (_rulesObject) {
+
+            return $('.cart-form').validate({
+                rules:  _rulesObject,
+                messages: {
+                    cart_tel: {
+                        required: ", поле Телефон обязательно для заполнения"
+                    },
+                    cart_code: {
+                        required: ", поле Код из SMS обязательно для заполнения",
+                        min: ", минимум 4 символа"
+                    },
+                    cart_app: {
+                        required: ", поле Квартира обязательно для заполнения",
+                        min: ", можно вводить только цифры"
+                    },
+                    cart_house: {
+                        required: ", поле Дом обязательно для заполнения"
+                    },
+                    cart_street: {
+                        required: ", поле Улица обязательно для заполнения"
+                    },
+                    shopSelector: {
+                        required: ", поле Адрес магазина обязательно для заполнения"
+                    },
+                    bonus_name: {
+                        required: ", поле ФИО обязательно для заполнения"
+                    },
+                    bonus_date: {
+                        required: ", поле Дата рождения обязательно для заполнения"
+                    },
+                    bonus_email: {
+                        required: ", поле E-mail обязательно для заполнения"
+                    },
+                },
+                focusCleanup: true, //убирает сообщение об ошибке в активном поле
+                focusInvalid: false, //ставит фокус на первое поле ввода
+                errorElement: "span",
+                errorPlacement: function(error, element) {
+                    var $errorWrapper = $('.cart-form-footer__error');//input- родитель общий - деть-спан
+                    error.appendTo($errorWrapper);
+                },
+                //клик по чекбоксу бонусной карты для деактивации кнопки Оформить заказ
+                onclick: function (element) {
+                    if ($("input[name='cart_bonus']").is(":checked")) {
+                        $(".cart-form-footer-order__btn").prop('disabled', true).addClass("disabled");
+                        $('.cart-form-footer__error').css('display', 'block');
+                    } else {
+                        $('.cart-form__input-fio.valid, .cart-from__input-birth.valid, .cart-form__input-email.valid').val('');
+                        $('.cart-form__input-fio.valid, .cart-from__input-birth.valid, .cart-form__input-email.valid').removeClass('valid');
+                        console.log($('.cart-form__input-fio.valid').val());
+                        if (checkInputValidFields($('.cart-input-js.valid'))) {
+                            $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                            $('.cart-form-footer__error').css('display', 'none');
+                        } else {
+                            $(".cart-form-footer-order__btn").prop('disabled', true).addClass("disabled");
+                            $('.cart-form-footer__error').css('display', 'block');
+                        }
+                    }
+                },
+                onkeyup: function (element) {
+                    var count = 12,
+                        counter = '';
+                    function timer() {
+                        count = count - 1;
+                        if (count <= 0) {
+                            clearInterval(counter);
+                            $('.cart-form-label__span-code').removeClass('active');
+                            $('.cart-form-code__text').addClass('active');
+                        }
+                        $('.timer').text(count);
+                    }
+
+                    //открытие поля с смс-кодом
+                    if($('.cart-from__input-tel').valid() && $('.cart-from__input-tel.valid').length) {
+                        $('.cart-form__code').slideDown();
+                        // $('.cart-form-addblock').slideDown();
+                        $('.box-shadow').css('display', 'none');
+
+                        //проверка для правильного запуска таймера + смс-код
+                        if($(element).hasClass("cart-from__input-tel") && !$('.cart-from__input-code').val().length && $('.cart-from__input-tel.valid').val().length == 18) {
+                            /*counter = setInterval(timer, 1000);
+
+                                       if($('.cart-from__input-code.valid').length) {
+                                           clearInterval(counter);
+                                       }*/
+                            $.ajax({
+                                type: 'post',
+                                data: {
+                                    "PHONE": $('.cart-from__input-tel').val(),
+                                    "ACTION": "sendcode"
+                                },
+                                dataType: "json",
+                                url: '/ajax/orderPhoneConfirm.php',
+                                success: function(data) {
+                                    counter = setInterval(timer, 1000);
+
+                                    if($('.cart-from__input-code.valid').length) {
+                                        clearInterval(counter);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        $('.cart-form__code').slideUp();
+                        // $('.cart-form-addblock').slideUp();
+                        $('.box-shadow').css('display', 'block');
+                    }
+
+                    if($(element).hasClass("cart-from__input-code") && $(".cart-from__input-code").valid() && $('.cart-from__input-code.valid').length && $('.cart-from__input-code.valid').val().length == 4) {
+                        $.ajax({
+                            type: 'post',
+                            data: {
+                                "PHONE": $('.cart-from__input-tel').val(),
+                                "CODE": $(".cart-from__input-code").val(),
+                                "ACTION": "checkcode"
+                            },
+                            dataType: "json",
+                            url: '/ajax/orderPhoneConfirm.php',
+                            success: function(data) {
+                                if (data.error == 1){
+                                    $(".cart-from__input-code").removeClass("valid");
+                                }
+                            }
+                        });
+                    }
+
+                    //активация кнопки Оформить заказ
+                    if ($(element).valid()) {
+
+                        if (activeTab == 0) {
+                            if ($("input[name='cart_bonus']").is(":checked")) {
+                                if(checkInputValidFields($('.cart-form-delivery-curier .cart-input-js.valid, .cart-from__input-tel.valid, .cart-from__input-code.valid, .cart-form__input-fio.valid, .cart-from__input-birth.valid, .cart-form__input-email.valid'))) {
+                                    $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                                    $('.cart-form-footer__error').css('display', 'none');
+                                }
+                            } else {
+                                if(checkInputValidFields($('.cart-form-delivery-curier .cart-input-js.valid, .cart-from__input-tel.valid, .cart-from__input-code.valid'))) {
+                                    $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                                    $('.cart-form-footer__error').css('display', 'none');
+                                }
+                            }
+                        }
+
+                        if (activeTab == 1) {
+                            if ($("input[name='cart_bonus']").is(":checked")) {
+                                if ($('.cart-from__input-tel.valid') && typeof($('.cart-from__input-tel.valid').val())!=='undefined' && $('.cart-from__input-code.valid')&& typeof($('.cart-from__input-code.valid').val())!=='undefined' && window.adressSelectisValid && checkInputValidFields($('.cart-input-js.valid'))) {
+                                    $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                                    $('.cart-form-footer__error').css('display', 'none');
+                                }
+                            } else {
+                                // if ($('.cart-from__input-tel.valid') && typeof($('.cart-from__input-tel.valid').val())!=='undefined' && $('.cart-from__input-code.valid') && typeof($('.cart-from__input-code.valid').val())!=='undefined' && window.adressSelectisValid) {
+                                $(".cart-form-footer-order__btn").prop('disabled', false).removeClass("disabled");
+                                $('.cart-form-footer__error').css('display', 'none');
+                                // }
+                            }
+                        }
+
+                    } else {
+                        $(".cart-form-footer-order__btn").prop('disabled', true).addClass("disabled");
+                        $('.cart-form-footer__error').css('display', 'block');
+                    }
+
+                },
+                submitHandler: function(form, event){
+                    event.preventDefault();
+
+                    if ($("input[name='cart_bonus']").is(":checked")){
+                        var anketaFIO = $("input[name='bonus_name']").val().split(" ");
+                    }
+
+                    $.ajax({
+                        type: 'post',
+                        data: {
+                            CSRF: "",
+                            "ORDER[USER_NAME]": $("input[name='cart_bonus']").is(":checked") ? anketaFIO[1] : "Заказ",
+                            "ORDER[USER_PHONE]": $("input[name='cart_tel']").val(),
+                            "ORDER[NUM_OF_PERSONS]": $(".cart-from-buttons__number").text(),
+                            "ORDER[DELIVERY_TYPE]": $(".cart-form-delivery__link.active").data("type"),
+                            "ORDER[STREET]": $("input[name='cart_street']").val(),
+                            "ORDER[HOUSE]": $("input[name='cart_house']").val(),
+                            "ORDER[APARTMENT]": $("input[name='cart_app']").val(),
+                            "ORDER[DISTRICT_ID]": $(".cart-form-district__select").val(),
+                            "ORDER[COMMENT]": $(".cart-from__textarea").val(),
+                            "ORDER[COMMENT_2]": $(".cart-from__textarea").val(),
+                            "ORDER[DELIVERY_PICKUP_ID]": $(".cart-form-shops__select").val(),
+                            "ORDER[PAYMENT_TYPE]": $(".cart-form-pay-link.active").attr("value"),
+                            "ORDER[DELIVERY_TIME_TYPE]": $(".delivery-time__input").val() == "" ? 0 : 1,
+                            "ORDER[DELIVERY_DATE]": $(".delivery-time__select").val(),
+                            "ORDER[DELIVERY_TIME]": $(".delivery-time__input").val(),
+                            "ORDER[DELIVERY_DATE_2]": $(".delivery-time__select").val(),
+                            "ORDER[DELIVERY_TIME_2]": $(".delivery-time__input").val(),
+                            "ORDER[PAY_IDENT]": $(".cart-form-pay-link.active").data("type"),
+                            "ANKETA[ANKETA_TYPE]": $("input[name='cart_bonus']").is(":checked") ? "5" : "4",
+                            "ANKETA[USER_LAST_NAME]": $("input[name='cart_bonus']").is(":checked") ? anketaFIO[0] : "",
+                            "ANKETA[USER_MIDDLE_NAME]": $("input[name='cart_bonus']").is(":checked") ? anketaFIO[2] : "",
+                            "ANKETA[USER_BIRTH_DATE]": $("input[name='cart_bonus']").is(":checked") ? $("input[name='bonus_date']").val() : "",
+                            "ANKETA[USER_EMAIL]": $("input[name='cart_bonus']").is(":checked") ? $("input[name='bonus_email']").val() : ""
+                        },
+                        dataType: "json",
+                        url: '/bitrix/components/bd/checkout/component.php',
+                        success: function(data) {
+                            if (data.status == 0) {
+
+                            } else {
+                                /*if (window.yaCounter != undefined && window.yaCounter != null) {
+                                    yaCounter.reachGoal('otpravil_zakaz', {});
+                                }*/
+                                /*if (ga != undefined) {
+                                    ga('send', 'event', 'order', 'submit');
+                                }*/
+
+                                //меняем заголовок попапов и содержимое попапа в зависимости от выбранных вкладок
+                                if(activeTab == 0) {
+                                    $('#modal2').fadeIn(400);
+                                }
+                                if(activeTab == 1) {
+                                    $('#modal').fadeIn(400);
+                                    var text = $('.delivery-time--js2 .sod_label').text().toLowerCase() + ' в ' + $('.delivery-time__input--js2').val();
+                                    $('.modal-time').text(text);
+                                    $('.modal-address').text($('.cart-form-shops__select option:selected').text());
+                                }
+
+                                if($('.cart-form-pay-link__card').hasClass('active')) {
+                                    $('.modal-title').text('Спасибо за покупку');
+                                }
+
+                                var modalOffset = $('.modal-cart').offset().top;
+
+                                $('html, body').animate({
+                                    scrollTop: modalOffset - 100
+                                }, 1000);
+                                $('.popup-cart').removeClass('popup-cart--active');
+
+                                //закрыть
+                                $('.popup-overlay, .popup-close2').on('click',  function(){
+                                    renderBasket();
+                                    $('.modal-cart').fadeOut(200);
+                                    $('.popup-overlay').fadeOut(200);
+                                    if ($(".cart-form-pay-link.active").data("type") == "online"){
+                                        window.location.href = "/payment-init.php?order=" + data.orderID;
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+
+                }
+
+            });
+
+        }
+
+        validatorActivate ({
+            cart_tel: {
+                required: true,
+                minlength: 18,
+            },
+            cart_code: {
+                required: true,
+                minlength: 4
+            },
+            cart_street: {
+                required: true,
+                minlength: 2
+            },
+            cart_house: {
+                required: true,
+                minlength: 1
+            },
+            cart_app: {
+                required: true,
+                digits: true,
+                minlength: 1
+            },
+            bonus_name: {
+                required: true,
+                minlength: 1
+            },
+            bonus_date: {
+                required: true,
+                minlength: 3
+            },
+            bonus_email: {
+                required: true
+            }
+        });
+    });
+</script>
+</body>
+</html>
