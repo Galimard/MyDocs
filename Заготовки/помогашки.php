@@ -261,6 +261,34 @@
                     0 0 0 1px #FF4157,
                     0 0 0 4px rgba(255,65,87,0.30);
         }
+
+        /*показать скроллбар на мобилке*/
+        .vacancies .vacancies-section .vacancies-item .vacancies-item-description .vacancies-item-description-wrapper {
+            overflow-x: auto;
+        }
+
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+        }
+
+        ::-webkit-scrollbar:vertical {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar:horizontal {
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, .5);
+            border-radius: 10px;
+            border: 2px solid #ffffff;
+        }
+
+        ::-webkit-scrollbar-track {
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
     </style>
 </head>
 <body>
@@ -270,6 +298,27 @@
 
 
 <!--===========================================скрипты======================================================-->
+<script>
+    //отложить действие оnkeyup
+    function delay(callback, ms) {
+        var timer = 0;
+        return function() {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+
+
+    // Example usage:
+
+    $('#input').keyup(delay(function (e) {
+        console.log('Time elapsed!', this.value);
+    }, 500));
+</script>
+
 <script>
     //появление блока в зоне видимости
     function come(elem) {
