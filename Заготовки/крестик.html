@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /*крестик*/
+        .close {
+            position: absolute;
+            right: 32px;
+            top: 32px;
+            width: 32px;
+            height: 32px;
+            opacity: 0.3;
+        }
+        .close:hover {
+            cursor: pointer;
+            opacity: 1;
+            -webkit-transition: opacity 0.3s ease;
+            -moz-transition: opacity 0.3s ease;
+            -ms-transition: opacity 0.3s ease;
+            -o-transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease;
+        }
+        .close::before, .close::after {
+            position: absolute;
+            left: 15px;
+            content: ' ';
+            height: 33px;
+            width: 2px;
+            background-color: #000000;
+        }
+        .close::before {
+            transform: rotate(45deg);
+        }
+        .close::after {
+            transform: rotate(-45deg);
+        }
+        /*крестик*/
+
+        /*video iframe adaptiv*/
+        .video-block {
+            max-width: 1140px;
+            height: 572px;
+            position: relative; /*для iframe*/
+        }
+
+        .video-block iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            min-width: 100%;
+            min-height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+<span class="close js-close2"></span>
+<script>
+    //Медиазапрос на Javascript------------------------------------------------------------------------------------------------------------------(2)
+    //@param mediaQueryString (String) - строка медиа-запроса как в CSS
+    //@param action(function) - функция, которая выполняется при соблюдении условий медиа-запроса
+    function media(mediaQueryString, action){
+        'use strict';
+        var handleMatchMedia = function (mediaQuery) {
+            if (mediaQuery.matches) { //Попадает в запроc
+                if (action  && typeof(action) === 'function') {
+                    action();
+                }
+            }
+        };
+        var mql = window.matchMedia(mediaQueryString); //стандартный медиазапрос для смены режима просмотра
+        handleMatchMedia(mql);
+        mql.addListener(handleMatchMedia);
+
+    }
+    /* Usage:
+       media('all and (max-width: 550px)', function(){
+       $('.mobile-search-result__item a').addClass('clearfix');
+   });
+*/
+    //медиа-запрос для prices__slider
+    function media(mediaQueryString, action){
+        'use strict';
+        var handleMatchMedia = function (mediaQuery) {
+            if (mediaQuery.matches) { //Попадает в запроc
+                if (action  && typeof(action) === 'function') {
+                    action();
+                }
+            }
+        };
+        var mql = window.matchMedia(mediaQueryString); //стандартный медиазапрос для смены режима просмотра
+        handleMatchMedia(mql);
+        mql.addListener(handleMatchMedia);
+
+    }
+
+    media('all and (max-width: 1180px)', function(){
+        $('.prices__slider--adaptiv').slick({
+            arrows: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            infinite: true,
+            dots: false,
+            // autoplay: true,
+            autoplaySpeed: 3000,
+            responsive: [
+                {
+                    breakpoint: 500,
+                    settings: {
+                        arrows: false
+                    }
+                }
+            ]
+        });
+    });
+
+    //validator
+    //Параметры валидатора----------------------------------------------------------------------------------------------------------------------(4)
+    $.validator.addMethod("correctEmail", function (value, element) {
+        return this.optional(element) || /[a-z0-9]+@[a-z0-9]+\.[a-z]+/.test(value);
+    }, 'Please enter a valid email address.');
+    //Функция проверки малой формы----------------------------------------------------------------------------------------------------------------------(5)
+    //Проверяет корректность заполнения полей
+    //@param strSmallForm (string) - имя проверяемой формы
+    function smallFormValidate(strSmallForm){
+        'use strict';
+        $(strSmallForm).validate({
+            rules: {
+                mailto: {
+                    required: true,
+                    correctEmail: true,
+                    minlength: 5
+                },
+                policyAgreement: {
+                    required: true,
+                    minlength: 1
+                }
+            },
+            messages: {
+                policyAgreement: 'Вы не приняли условия обработки персональных данных',
+                mailto: 'Укажите, пожалуйста, корректный email'
+            },
+            errorElement: "span",
+            errorPlacement: function(error, element) {
+                var $errorWrapper = $(element).closest('.small-form__fields-wrapper').find('.small-form__error-wrapper');
+                error.appendTo( $errorWrapper );
+            },
+            onfocusout: function(element) {
+                var $errorWrapper = $(element).closest('.small-form__fields-wrapper').find('.small-form__error-wrapper');
+                if(Number($(element).val().length) === 0){
+                    $(element).removeClass('valid');
+                    $(element).removeClass('error');
+                    $($errorWrapper).empty();
+                }
+                if(Number($(element).val().length) > 0){
+                    $(element.closest('form')).valid();
+                }
+            },
+            submitHandler: function(form){
+                $.ajax({
+                    url: 'https://al-programmist.github.io/healthy/app/ajax/response.json',
+                    success: function(data){
+                        //Успешная обработка
+                        if(data.answer === 1) {
+                            //Вызов модального окна с заглушкой.
+                            $.magnificPopup.close();
+                            $.magnificPopup.open({
+                                items: {
+                                    src: '#callback-popup-message'
+                                },
+                                type: 'inline',
+                                preloader: false,
+                                closeBtnInside: false,
+                                closeMarkup: '<button class="mfp-close  mfp-close--message" title="Закрыть (ESC)"><div></div></button>',
+                                callbacks: {
+                                    afterClose: function(){
+                                        form.submit();
+                                    }
+
+                                }
+                            });
+                        }
+
+                        if(data.answer === 0) {
+                            //Вызов модального окна с заглушкой
+                            console.log('fail');
+                        }
+
+                    }
+                });
+                return false;
+            },
+            invalidHandler: function(event, validator) {
+                // 'this' refers to the form
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+
+
+                }
+            },
+
+        });
+
+    }
+    // Usage:
+    // smallFormValidate('form[id="book-form"]');
+</script>
+</body>
+</html>

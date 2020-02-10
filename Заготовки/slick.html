@@ -35,6 +35,33 @@
             autoplaySpeed: 3000
         });
     }
+
+    media('all and (min-width: 590px)', function() {
+        $('.partners-slider__wrap').slick({
+            infinite: true,
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            arrows: true,
+            prevArrow: '<a href="#" class="reviews-slider__prev"></a>',
+            nextArrow: '<a href="#" class="reviews-slider__next"></a>',
+            appendArrows: $('.partners-slider__arrows'),
+            dots: false,
+            responsive: [
+                {
+                    breakpoint: 720,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                }
+            ]
+        });
+    });
+
+    media('all and (max-width: 589px)', function() {
+        if($('.partners-slider__wrap').hasClass('slick-slider')) {
+            $('.partners-slider__wrap').slick('unslick');
+        }
+    });
 </script>
 </body>
 </html>

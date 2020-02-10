@@ -96,6 +96,10 @@ $(document).ready(function() {
     var container = $('.container:not(:has(input))');
     // console.log(container);
 
+    /*-----------------------------------------------------------------------------------maskeinput--------------------------------------------------------------------------------*/
+    if($('.cart-from__input-tel') && $('.cart-from__input-tel').length > 0) {
+        $('.cart-from__input-tel').mask('+7 (999) 999-99-99');
+    }
     //----------------------активный пункт меню---------------------
 
     $('.nav__item').on('click', function(e) {

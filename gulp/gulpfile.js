@@ -160,8 +160,8 @@ gulp.task('pug', function() {
         .pipe(pug({
             pretty: true
         }))
-        .pipe(gulp.dest('app/')
-        .pipe(reload({ stream: true })); //И перезагрузим сервер
+        .pipe(gulp.dest('app/'))
+        .pipe(reload({ stream: true })) //И перезагрузим сервер
 });
 
 //удалить все в указанной папке
