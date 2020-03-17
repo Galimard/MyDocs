@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<!--    убрать зум в инпуте-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
@@ -14,6 +16,15 @@
             font-weight: 900;
             font-style: normal;
         }
+
+        /*многоточие*/
+        p.clip {
+            white-space: nowrap; /* Запрещаем перенос строк */
+            overflow: hidden; /* Обрезаем все, что не помещается в область */
+            text-overflow: ellipsis; /* Добавляем многоточие */
+            width: 200px;
+        }
+
         /*--------------------------------------------------общие стили--------------------------------------------------*/
         * {
             /*outline: 1px solid red;*/
@@ -333,19 +344,62 @@
         }
 
         /*селектор not*/
-        .review-slider-item:not(.slick-current) {
-            opacity: 0.2;
-            transform: scale(0.8);
-        }
-
         /*слайды, кроме текущего*/
         .review-slider-item:not(.slick-current) {
               opacity: 0.2;
               transform: scale(0.8);
           }
+
+        /*горизонтальный скролл*/
+            .service-slider {
+                width: 100%;
+                display: flex;
+                overflow-x: scroll;
+            }
+            .service-slider-item {
+                min-width: 200px;
+            }
     </style>
 </head>
 <body>
+
+<!--скролл меню при скролле-->
+<div class="module-b__element" id="about" data-onscroll="1"></div>
+<div class="module-b__element" id="about1" data-onscroll="1"></div>
+<div class="module-b__element" id="about2" data-onscroll="1"></div>
+
+<a href="#about" data-scroll="about" class="module-b__links module-b__links_anchor">Назначение модуля</a>
+<a href="#about" data-scroll="about1" class="module-b__links module-b__links_anchor">Назначение модуля</a>
+<a href="#about" data-scroll="about2" class="module-b__links module-b__links_anchor">Назначение модуля</a>
+
+<script>
+    //scroll menu page delivery
+    $('.delivery-aside-menu a').on("click", function (e) {
+        e.preventDefault();
+
+        $('html, body').animate({
+            scrollTop: currentBlockOffset //с небольшим отступом
+        }, 1000);
+    });
+
+    //scroll links menu
+    function scrollNav() {
+        var scroll_top = $(document).scrollTop();
+        var id;
+        $('[data-scroll]').removeClass('active');
+        $('[data-onscroll="1"]').each(function() {
+            if (scroll_top + 110 >= $(this).offset().top) {
+                id = $(this).attr('id');
+                return;
+            }
+        });
+        $('[data-scroll="' + id + '"]').addClass('active');
+    }
+
+    $(window).scroll(scrollNav);
+    //end scroll links menu
+</script>
+
 
 <!--messengers-->
 <div class="top-mess col-md-3">
@@ -436,9 +490,200 @@ $('#my-video-display').mediaelementplayer();
     <button type="submit" class="btn contacts-review__btn">Submit</button>
 </form>
 
+<!--прелоадер-->
+<div id="floatingCirclesG">
+    <div class="f_circleG" id="frotateG_01"></div>
+    <div class="f_circleG" id="frotateG_02"></div>
+    <div class="f_circleG" id="frotateG_03"></div>
+    <div class="f_circleG" id="frotateG_04"></div>
+    <div class="f_circleG" id="frotateG_05"></div>
+    <div class="f_circleG" id="frotateG_06"></div>
+    <div class="f_circleG" id="frotateG_07"></div>
+    <div class="f_circleG" id="frotateG_08"></div>
+</div>
+<style>
+    #floatingCirclesG{
+        position:relative;
+        width:125px;
+        height:125px;
+        margin:auto;
+        transform:scale(0.6);
+        -o-transform:scale(0.6);
+        -ms-transform:scale(0.6);
+        -webkit-transform:scale(0.6);
+        -moz-transform:scale(0.6);
+    }
+
+    .f_circleG{
+        position:absolute;
+        background-color:rgb(255,255,255);
+        height:22px;
+        width:22px;
+        border-radius:12px;
+        -o-border-radius:12px;
+        -ms-border-radius:12px;
+        -webkit-border-radius:12px;
+        -moz-border-radius:12px;
+        animation-name:f_fadeG;
+        -o-animation-name:f_fadeG;
+        -ms-animation-name:f_fadeG;
+        -webkit-animation-name:f_fadeG;
+        -moz-animation-name:f_fadeG;
+        animation-duration:1.2s;
+        -o-animation-duration:1.2s;
+        -ms-animation-duration:1.2s;
+        -webkit-animation-duration:1.2s;
+        -moz-animation-duration:1.2s;
+        animation-iteration-count:infinite;
+        -o-animation-iteration-count:infinite;
+        -ms-animation-iteration-count:infinite;
+        -webkit-animation-iteration-count:infinite;
+        -moz-animation-iteration-count:infinite;
+        animation-direction:normal;
+        -o-animation-direction:normal;
+        -ms-animation-direction:normal;
+        -webkit-animation-direction:normal;
+        -moz-animation-direction:normal;
+    }
+
+    #frotateG_01{
+        left:0;
+        top:51px;
+        animation-delay:0.45s;
+        -o-animation-delay:0.45s;
+        -ms-animation-delay:0.45s;
+        -webkit-animation-delay:0.45s;
+        -moz-animation-delay:0.45s;
+    }
+
+    #frotateG_02{
+        left:15px;
+        top:15px;
+        animation-delay:0.6s;
+        -o-animation-delay:0.6s;
+        -ms-animation-delay:0.6s;
+        -webkit-animation-delay:0.6s;
+        -moz-animation-delay:0.6s;
+    }
+
+    #frotateG_03{
+        left:51px;
+        top:0;
+        animation-delay:0.75s;
+        -o-animation-delay:0.75s;
+        -ms-animation-delay:0.75s;
+        -webkit-animation-delay:0.75s;
+        -moz-animation-delay:0.75s;
+    }
+
+    #frotateG_04{
+        right:15px;
+        top:15px;
+        animation-delay:0.9s;
+        -o-animation-delay:0.9s;
+        -ms-animation-delay:0.9s;
+        -webkit-animation-delay:0.9s;
+        -moz-animation-delay:0.9s;
+    }
+
+    #frotateG_05{
+        right:0;
+        top:51px;
+        animation-delay:1.05s;
+        -o-animation-delay:1.05s;
+        -ms-animation-delay:1.05s;
+        -webkit-animation-delay:1.05s;
+        -moz-animation-delay:1.05s;
+    }
+
+    #frotateG_06{
+        right:15px;
+        bottom:15px;
+        animation-delay:1.2s;
+        -o-animation-delay:1.2s;
+        -ms-animation-delay:1.2s;
+        -webkit-animation-delay:1.2s;
+        -moz-animation-delay:1.2s;
+    }
+
+    #frotateG_07{
+        left:51px;
+        bottom:0;
+        animation-delay:1.35s;
+        -o-animation-delay:1.35s;
+        -ms-animation-delay:1.35s;
+        -webkit-animation-delay:1.35s;
+        -moz-animation-delay:1.35s;
+    }
+
+    #frotateG_08{
+        left:15px;
+        bottom:15px;
+        animation-delay:1.5s;
+        -o-animation-delay:1.5s;
+        -ms-animation-delay:1.5s;
+        -webkit-animation-delay:1.5s;
+        -moz-animation-delay:1.5s;
+    }
+
+
+
+    @keyframes f_fadeG{
+        0%{
+            background-color:rgb(0,0,0);
+        }
+
+        100%{
+            background-color:rgb(255,255,255);
+        }
+    }
+
+    @-o-keyframes f_fadeG{
+        0%{
+            background-color:rgb(0,0,0);
+        }
+
+        100%{
+            background-color:rgb(255,255,255);
+        }
+    }
+
+    @-ms-keyframes f_fadeG{
+        0%{
+            background-color:rgb(0,0,0);
+        }
+
+        100%{
+            background-color:rgb(255,255,255);
+        }
+    }
+
+    @-webkit-keyframes f_fadeG{
+        0%{
+            background-color:rgb(0,0,0);
+        }
+
+        100%{
+            background-color:rgb(255,255,255);
+        }
+    }
+
+    @-moz-keyframes f_fadeG{
+        0%{
+            background-color:rgb(0,0,0);
+        }
+
+        100%{
+            background-color:rgb(255,255,255);
+        }
+    }
+</style>
 
 <!--===========================================скрипты======================================================-->
 <script>
+    /*записать в многомерный массив*/
+    balloons.push([<?=key($ar_pav)?>, point]);
+
     /*cookie*/
     function setCookie(form) {
         var arrFileds = $(form).serializeArray();
@@ -505,7 +750,37 @@ $('#my-video-display').mediaelementplayer();
             $('.delivery-link--js2').text(cook);
         }
     }
+
+    //основной инстинкт, autokomfort
+    //нужен плагин!! сначала jquery, потом куки плагин
+    if ($.cookie('ageisover18') == "true"){
+        $('.overlay_age > .wrapper').removeClass('blur');
+        $('body').removeClass('no-scroll');
+        $('.overlay_age').removeClass('age-wrap');
+    }
+    if ($.cookie('ageisover18') == "false" || $.cookie('ageisover18') == undefined){
+        $('#main').addClass('no-scroll');
+        $('.overlay_age').addClass('age-wrap');
+        $('.overlay_age > .wrapper').addClass('blur');
+        $("#age_question_popup").fadeIn(400);
+        // $.fancybox({
+        // 	'href': "#age_question_popup",
+        // 	'padding': 0,
+        // 	'showCloseButton': false,
+        // 	'closeButton' :false
+        // });
+    }
+
+    $(".age_question_buttons--yes").on('click',function(){
+        $.cookie('ageisover18',"true");
+        // $.fancybox.close();
+        $("#age_question_popup").fadeOut(200);
+        $('.overlay_age > .wrapper').removeClass('blur');
+        $('body').removeClass('no-scroll');
+        $('.overlay_age').removeClass('age-wrap');
+    });
 </script>
+<div class="head-advert <?if($_COOKIE['advert'] == "true" || $_COOKIE['advert'] == "undefined"):?>active<?endif;?>">
 
 <script>
     //============================активная вкладка доставки===============================//
@@ -917,7 +1192,6 @@ $('#my-video-display').mediaelementplayer();
         var mql = window.matchMedia(mediaQueryString); //стандартный медиазапрос для смены режима просмотра
         handleMatchMedia(mql);
         mql.addListener(handleMatchMedia);
-
     }
 
 
@@ -937,6 +1211,10 @@ $('#my-video-display').mediaelementplayer();
             slidesToScroll: 1,
             arrows: true,
             appendArrows: $('.partners-slider__arrows'),
+            customPaging : function(slider, i) {
+                var title = $(slider.$slides[i]).data('title');
+                return '<a class="pager__item"> '+title+' </a>';
+            }
             dots: false,
             responsive: [
                 {
@@ -1104,38 +1382,8 @@ $('#my-video-display').mediaelementplayer();
         cursorcolor: "rgba(0, 0, 0, 0.3)",
         cursorwidth: "6px",
         autohidemode: false,
-        railpadding: { top: 0, right: 2, left: 0, bottom: 0 }
-    });
-
-    //скролл меню при скролле
-    var positions = [], //сюда сложим на загрузке страницы позиции наших "якорных" блоков, чтобы не считать их каждый раз. и сюда же положим ссылки на соответствующие a.scroll-to
-        currentActive = null, //здесь будет храниться id текущего блока, чтобы не менять классы по 100 раз за одну прокрутку
-        links = $('.scroll-to'); //сохраним массив всех a.scroll-to
-
-    $(".anchor-delivery").each(function(){ //перебираем блоки, сохраняем позиции и ссылки на пункты меню
-        positions.push({
-            top: $(this).position().top - 100,
-            a: links.filter('[href="#'+$(this).attr('id')+'"]')
-        });
-    });
-
-    //делаем реверс массива, чтобы при скролле перебирать его с конца и выходить из цикла при нахождении
-    //зачем нам проверять каждый блок, если прокрутка уже ниже последнего, верно?
-    positions = positions.reverse();
-
-    $(window).on('scroll',function() {
-
-        var winTop = $(window).scrollTop();
-        for(var i = 0; i < positions.length; i++){
-            if(positions[i].top < winTop){ //если прокрутка страницы ниже нашего блока
-                if(currentActive !== i){ //и если мы еще не добавили класс текущему блоку
-                    currentActive = i;
-                    links.filter('.active').removeClass('active'); //снимаем класс .active с текущего пункта меню
-                    positions[i].a.addClass("active");
-                }
-                break; //выходим из цикла, не нужно проверять блоки, которые выше
-            }
-        }
+        railpadding: { top: 0, right: 2, left: 0, bottom: 0 },
+        cursorborder: "1px solid #fff"
     });
 
     /*--------------------------------------------------------------------validation form---------------------------------------------------------------------*/
@@ -1361,6 +1609,38 @@ $('#my-video-display').mediaelementplayer();
 
     }
 
+    //replace
+    function auto_layout(str) {
+        var search = [
+            "й","ц","у","к","е","н","г","ш","щ","з","х","ъ",
+            "ф","ы","в","а","п","р","о","л","д","ж","э",
+            "я","ч","с","м","и","т","ь","б","ю"
+        ];
+        var replace = [
+            "q","w","e","r","t","y","u","i","o","p","[","]",
+            "a","s","d","f","g","h","j","k","l",";","'",
+            "z","x","c","v","b","n","m",",","."
+        ];
+        for (var i=replace.length-1;i>0;i-=1) {
+            var reg = new RegExp("[" + replace[i] + "]", "gi");
+            str = str.replace(reg, search[i]);
+        }
+        return str;
+    }
+
+    //многоточие
+    if($('.js-catalog-item-text').length > 0) {
+        $('.js-catalog-item-text').each(function () {
+            var text = $(this).text();
+
+            if(text.length > 40) {
+                text = text.slice(0,40) + '...';
+
+                $(this).text(text);
+            }
+        })
+
+    }
 
 </script>
 
